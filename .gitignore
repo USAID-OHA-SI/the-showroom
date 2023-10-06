@@ -88,3 +88,5 @@ Images/*
 Graphics/*
 Data/*
 Dataout/*
+presentations/*
+!presentations/*.qmd
