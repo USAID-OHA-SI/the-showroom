@@ -1,0 +1,64 @@
+---
+title: "GIS Infrastructure for HIV-AIDS Work"
+author: "Baboyma Kagniniwa, Tim Essam"
+format: revealjs
+editor: visual
+---
+
+## Introduction
+
+PEPFAR ...
+
+## Outline
+
+1. Background
+2. Tools & Capacity Building and Training
+3. Tools & Self Service Options
+3. Use cases
+
+## Background
+
+### Pre-COVID
+
+GH/OHA had 1 GIS Specialist for HQ and Country Support ...
+
+### COVID & WFH
+
+GH/OHA hired more SI Advisers, Data Analysts, and Data Scientists in response to an increase work load and number of request for country support.
+
+R / RStudio is starting to compete with Tableau, ESRI/ArcGIS, and other geospatial analytics and mapping tools ...
+
+R adoption is picking up ...
+
+The requests for maps is also picking up ...
+
+### Post-COVID
+
+M/GIS crack down on **Open Source Tools** due to the **Zero-trust policy** ...
+
+Majority of staff is still on Remote Work or Telework mode ...
+
+GH/OHA is not ramp up on **ArcGIS Licenses** ...
+
+## Tools & Capacity Building and Training
+
+### Tools 
+
+1. R 
+2. Tableau
+3. ArcGIS
+
+### Capacility Building and Training
+
+1. coRps
+2. TLC
+3. Etc
+
+### Tools & Self Service Options
+
+1. Custom R Packages - gisr & glitr
+2. PEPFAR Geospatial Data Parsing
+
+
+
+
