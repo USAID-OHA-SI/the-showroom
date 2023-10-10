@@ -1,28 +1,53 @@
 ---
 title: "GIS Infrastructure for HIV-AIDS Work"
-author: "Baboyma Kagniniwa, Tim Essam"
-format: revealjs
+date: "2023-10-18"
+author: 
+  - name: Baboyma Kagniniwa
+    email: bkagniniwa@usaid.gov
+  - name: Tim Essam
+    email: tessam@usaid.gov
+format: 
+  revealjs:
+    slide-number: c/t
+    width: 1600
+    height: 900
+    logo: "https://usaid-oha-si.github.io/assets/img/si_logo_white.png"
+    css: ["theme/theme.css"]
+    theme: simple
+    echo: true
+    rtl: false
+    incremental: true
+    preview-links: auto
 editor: visual
+editor_options:
+  chunk_output_type: inline
+project:
+    execute-dir: file
 ---
 
-## Introduction
+## Office of HIV/AIDS
 
-PEPFAR ...
+Implement the U.S. President's Emergency Plan for AIDS Relief (PEPFAR)
 
-## Outline
+![](https://www.state.gov/wp-content/uploads/2023/01/PEPFAR-20-Logo-Social-Tagged.jpg)
 
-1. Background
-2. Tools & Capacity Building and Training
-3. Tools & Self Service Options
-3. Use cases
+## About Us
 
-## Background
+The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.com/a/usaid.gov/gh-oha/home/oha-divisions-branches/-strategic-information-evaluation-informatics-division/strategic-information-branch))** provides technical expertise to support and promote data-informed decision making, through program monitoring, reporting and analysis in order to target resources appropriately to achieve HIV epidemic control.
 
-### Pre-COVID
+-   Support HQ and missions by building capacity for program monitoring and surveillance to improve HIV/AIDS programs and to provide accountability, oversight and management of programs and partners.
 
-GH/OHA had 1 GIS Specialist for HQ and Country Support ...
+-   Focus on strengthening PEPFAR and USAID program data for use in inter-agency and intra-agency analyses.
 
-### COVID & WFH
+-   [TL/DR: SI Branch is the data science hub of OHA]{style="color:#c43d4d; font-weight: bold;"}
+
+# [Pre-COVID]{style="color:white;"} {#sec-pre-covid background-image="https://unsplash.com/photos/d1eaoAabeXs/download?ixid"}
+
+## A Small But Mighty Team
+
+One GIS specialists for HQ & Country Support (50+ operating units)
+
+## COVID & WFH
 
 GH/OHA hired more SI Advisers, Data Analysts, and Data Scientists in response to an increase work load and number of request for country support.
 
@@ -32,7 +57,9 @@ R adoption is picking up ...
 
 The requests for maps is also picking up ...
 
-### Post-COVID
+# [Post-COVID]{style="color:white;"} {#sec-post-covid background-image="https://unsplash.com/photos/j2c7yf223Mk/download?ixid"}
+
+## Tool Restrictions
 
 M/GIS crack down on **Open Source Tools** due to the **Zero-trust policy** ...
 
@@ -42,23 +69,19 @@ GH/OHA is not ramp up on **ArcGIS Licenses** ...
 
 ## Tools & Capacity Building and Training
 
-### Tools 
+### Tools
 
-1. R 
-2. Tableau
-3. ArcGIS
+1.  R
+2.  Tableau
+3.  ArcGIS
 
 ### Capacility Building and Training
 
-1. coRps
-2. TLC
-3. Etc
+1.  coRps
+2.  TLC
+3.  Etc
 
 ### Tools & Self Service Options
 
-1. Custom R Packages - gisr & glitr
-2. PEPFAR Geospatial Data Parsing
-
-
-
-
+1.  Custom R Packages - gisr & glitr
+2.  PEPFAR Geospatial Data Parsing
