@@ -41,6 +41,28 @@ The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.co
 
 -   [TL/DR: SI Branch is the data science hub of OHA]{style="color:#c43d4d; font-weight: bold;"}
 
+# [Guiding Principles]{style="color:white;"} {#sec-guiding-principles background-image="https://unsplash.com/photos/CJBCaMkLP_U/download?ixid"}
+
+## Organize around shared responsibility and accountability
+
+-   Analyses are **well-documented, reproducible**, and **open** to the office
+
+-   Code pushed to github repo following SI best practices
+
+-   Leverage SI infrastructure (R packages / OHA colors / Tableau Prep Flows)
+
+-   Continuous improvement / open feedback loops (GitHub issues, after action reviews, etc.)
+
+## Why this works
+
+-   **Predictable** data structure, storage, and refresh schedule
+
+-   Critical mass of analysts who code (or are learning)
+
+-   **Space** for skill development and continuous learning
+
+-   Support from leadership
+
 # [Pre-COVID]{style="color:white;"} {#sec-pre-covid background-image="https://unsplash.com/photos/d1eaoAabeXs/download?ixid"}
 
 ## A Small But Mighty Team
@@ -67,21 +89,82 @@ Majority of staff is still on Remote Work or Telework mode ...
 
 GH/OHA is not ramp up on **ArcGIS Licenses** ...
 
-## Tools & Capacity Building and Training
+# [Tools and Capacity Building]{style="color:white;"} {#tools background-image="https://unsplash.com/photos/s8OO2-t-HmQ/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Nnx8dG9vbHN8ZW58MHx8fHwxNjgxODIxNjY1&force=true&w=1920"}
 
-### Tools
+## OHA Style Guide
+
+[Style guide](https://issuu.com/achafetz/docs/oha_styleguide) serves as a tool to define and enhance brand cohesion. Where possible, we preset defaults (font, color, titles, captions) to save colleagues time and cognitive load.
+
+[![](https://user-images.githubusercontent.com/5873344/232764503-ff2c980d-8de1-4572-993d-d111e43b54e9.png){fig-align="left"}](https://issuu.com/achafetz/docs/oha_styleguide)
+
+## Core Software
+
+::: columns
+::: {.column width="50%"}
+![](https://d33wubrfki0l68.cloudfront.net/1ac3f0e3753f18c7e2a8893957d1841fba1e3d08/48a33/wp-content/uploads/2018/10/rstudio-logo-flat.png){fig-align="center" width="500"}
+
+![](https://dev3lop.com/wp-content/uploads/2017/04/tableau-logo-tableau-software.jpg){fig-align="center" width="500"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_(2019%E2%80%93present).svg/2203px-Microsoft_Office_Excel_(2019%E2%80%93present).svg.png){fig-align="center" width="189"}
+:::
+
+::: {.column width="50%"}
+![](https://cdn.freebiesupply.com/logos/thumbs/2x/git-logo.png){fig-align="center" width="235"}
+
+![](https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo.png){fig-align="center" width="313"}
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Adobe_Illustrator_CC_icon.svg/2101px-Adobe_Illustrator_CC_icon.svg.png){fig-align="center" width="181"}
+:::
+:::
+
+## R + RStudio
+
+R + Rstudio is our primary analytic tool. Most of the SI infrastructure is based on `tidyverse` principles and workflows.
+
+::: {layout-nrow="3"}
+[![](https://github.com/USAID-OHA-SI/glitr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/glitr/) [![](https://github.com/USAID-OHA-SI/glamr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/glamr) [![](https://github.com/USAID-OHA-SI/gophr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/gophr) [![](https://github.com/USAID-OHA-SI/gisr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/gisr/)
+
+[![](https://github.com/USAID-OHA-SI/gagglr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/gagglr) [![](https://github.com/USAID-OHA-SI/grabr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/grabr) [![](https://github.com/USAID-OHA-SI/Wavelength/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/Wavelength) [![](https://github.com/USAID-OHA-SI/tameDP/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/tameDP)
+
+[![](https://github.com/USAID-OHA-SI/mindthegap/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/mindthegap) [![](https://github.com/USAID-OHA-SI/COVIDutilities/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/COVIDutilities) [![](https://github.com/USAID-OHA-SI/selfdestructin5/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/selfdestructin5/) [![](https://github.com/USAID-OHA-SI/coRps/raw/main/figures/logo.png){width="175"}](https://github.com/USAID-OHA-SI/coRps)
+:::
+
+## GitHub + Git
+
+Use git locally for version control and Github to store packages and analytic code online. This allows for remote collaboration and serves as a default knowledge management platform.
+
+*No data are stored on GitHub -- only code.*
+
+![](https://user-images.githubusercontent.com/5873344/232575267-f395d8ae-859e-4443-a563-b5c4fe81d61e.PNG)
+
+## Capacity Building
+
+1. coRps - R Community of Practice 
+2. TLC - Tableau Learning Collaborative
+3. Data Visualization Training & Lectures
+
+## Empowering Users
+Developed a set of self-service tools to automate routine data munging and visualization tasks
+
+1. Custom R Packages- gisr & glitr
+2. PEPFAR Geospatial Data Parsing
+3. Pre-set color choices & graphic elements
+
+
+
+## Tools
 
 1.  R
 2.  Tableau
 3.  ArcGIS
 
-### Capacility Building and Training
+## Capacility Building and Training
 
 1.  coRps
 2.  TLC
 3.  Etc
 
-### Tools & Self Service Options
+## Tools & Self Service Options
 
 1.  Custom R Packages - gisr & glitr
 2.  PEPFAR Geospatial Data Parsing
