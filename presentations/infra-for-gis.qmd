@@ -77,7 +77,7 @@ The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.co
 
 - Updating **recurring products** still meant clicking 1+
 
-- Other SI Advisers / Data Analysts / M&E Specialists had an excuse not to learn
+- The barrier to entry was high
 
 - **The GIS Specialist** is way too busy to get into other lines of work
 
@@ -97,7 +97,7 @@ OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in re
 
 - SI Branch is also starting to figure out how to build of each others work
 
-- **COVID Utilities** Package is born (inspired by Utilities)
+- **COVID Utilities** Package is born (inspired by ICPI Utilities)
 
 
 # [Post-COVID]{style="color:white;"} {#sec-post-covid background-image="https://unsplash.com/photos/j2c7yf223Mk/download?ixid"}
@@ -196,7 +196,6 @@ Use git locally for version control and Github to store packages and analytic co
 Make a personal commitment to continue to learn, teach, mentor and share your work with others. Blogs, brown bags, learning collaboratively, training sessions are also good options.
 
 Always make time to help others reproduce what you've done and/or shared.
-
 [![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/)
 
 # [DEMOS]{style="color:white;"} {#examples background-image="https://unsplash.com/photos/AFB6S2kibuk/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8bWFwc3xlbnwwfHx8fDE2OTcxNjUzODl8MA&force=true&w=1920"}
@@ -235,9 +234,10 @@ Let's find the file. We need to load some libraries and setup our reference dire
 library(tidyverse)
 library(sf)
 # OHA Custom Packages
-library(glamr)
-library(grabr)
-library(gisr)
+library(glamr) # Utilities functions
+library(grabr) # API Utilities
+library(gisr)  # Mapping
+library(glitr) # OHA Style guide
 
 # Directories
 dir_vec <- si_path(type = "path_vector")
@@ -279,6 +279,7 @@ pepfar_shp <- return_latest(
 ```
 
 ```{r}
+#| label: shp-data
 #| echo: false
 #| output: true
 pepfar_shp
@@ -293,6 +294,7 @@ What is inside this shapefile?
 #| echo: true
 #| output: false
 
+# Global shapefile
 spdf <- read_sf(pepfar_shp)
 
 # glimpse(spdf)
@@ -451,7 +453,7 @@ terr <- get_raster(path = file.path("..", dir_ras))
 
 ## Basemaps
 
-Generate a basemap
+Generate a basemap using administrative boundaries from naturalearth
 
 ```{r}
 #| label: ras-basemap-1
@@ -476,7 +478,7 @@ bmap
 
 ## Basemaps
 
-Generate a basemap with labels
+Generate a basemap with specific datasets
 
 ```{r}
 #| label: ras-basemap-2
@@ -486,8 +488,9 @@ Generate a basemap with labels
 #| warning: false
 
 # Basemap
-bmap <- terrain_map(countries = cntry, terr = terr, 
-                    add_labels = TRUE, mask = TRUE)
+bmap <- terrain_map(countries = cntry_shp,
+                    adm0 = cntry_shp, adm1 = psnu_shp, 
+                    terr = terr, mask = TRUE)
 ```
 
 Visualize the basemap
@@ -502,7 +505,7 @@ bmap
 
 ## Basemaps
 
-Generate a basemap with labels and neighbors countries
+Generate a basemap with labels
 
 ```{r}
 #| label: ras-basemap-3
@@ -511,44 +514,195 @@ Generate a basemap with labels and neighbors countries
 #| eval: true
 #| warning: false
 
+# Get attributes tables
+df_psnu <- datim_orgunits(cntry = cntry,
+                          username = datim_user(),
+                          password = datim_pwd()) %>% 
+  filter(orgunit_level == lvl_psnu) %>% 
+  rename_with(.cols = ends_with("_internal_id"),
+              .fn = ~str_replace(., "internal_id", "uid"))
+
+psnu_shp <- psnu_shp %>% 
+  left_join(df_psnu, by = c("uid" = "orgunit_uid")) %>% 
+  filter(!is.na(orgunit_name))
+
 # Basemap
-bmap <- terrain_map(countries = cntry, terr = terr, 
-                    add_labels = TRUE, add_neighbors = TRUE, mask = TRUE)
+bmap <- terrain_map(countries = cntry_shp,
+                    adm0 = cntry_shp, adm1 = psnu_shp, 
+                    terr = terr, mask = TRUE) 
+
+bmap <- bmap +
+  geom_sf_text(data = psnu_shp, 
+               aes(label = orgunit_name),
+               size = 3, color = usaid_black)
 ```
+
+## Basemaps
 
 Visualize the basemap
 
 ```{r}
-#| label: ras-basemap-view-3
+#| label: ras-basemap-output
 #| echo: true
 #| eval: true
 #| warning: false
+#| 
 bmap
 ```
 
 ## Basemaps
 
-Generate a basemap with specific datasets
+Let's summarize what we've done so far
 
 ```{r}
-#| label: ras-basemap-3
+#| label: ras-basemap-summary-global
+#| class-output: hscroll
+#| echo: true
+#| output: false
+#| eval: true
+#| logging: 
+#| warning: false
+
+# Global shapefile
+spdf <- read_sf(pepfar_shp)
+
+# Terrain data
+terr <- get_raster(path = file.path("..", dir_ras))
+
+# Global Orgunit levels
+df_lvls <- get_levels(username = datim_user(), password = datim_pwd()) %>% 
+  pivot_longer(cols = where(is.numeric), names_to = "orgunit_label", values_to = "orgunit_level")
+```
+
+```{r}
+#| label: ras-basemap-summary-cntry
+#| class-output: hscroll
+#| echo: true
+#| output: false
+#| eval: true
+#| logging: 
+#| warning: false
+
+# Country specific parameters
+
+# Country
+cntry <- "Nigeria"
+
+# extract country uid
+cntry_uid <- get_ouuid(operatingunit = cntry,
+                       username = datim_user(),
+                       password = datim_pwd(),
+                       baseurl = "https://datim.org/")
+
+df_orgs <- datim_orgunits(cntry = cntry, username = datim_user(), password = datim_pwd()) %>% 
+  rename_with(.cols = ends_with("_internal_id"),
+              .fn = ~str_replace(., "internal_id", "uid"))
+
+lvl_psnu <- df_lvls %>% 
+  filter(countryname == cntry, orgunit_label == "prioritization") %>% 
+  pull(orgunit_level)
+
+# Get attributes tables
+df_psnu <- df_orgs %>% 
+  filter(orgunit_level == lvl_psnu) 
+
+# filter out country boundary
+cntry_shp <- spdf %>% filter(uid == cntry_uid)
+  
+# filter out psn
+psnu_shp <- df_orgs %>% 
+  filter(orgunit_level == lvl_psnu)  %>% 
+  left_join(spdf, ., by = c("uid" = "orgunit_uid")) %>% 
+  filter(!is.na(orgunit_name))
+
+# Basemap
+bmap <- terrain_map(countries = cntry_shp,
+                    adm0 = cntry_shp, adm1 = psnu_shp, 
+                    terr = terr, mask = TRUE) 
+
+bmap <- bmap +
+  geom_sf_text(data = psnu_shp, 
+               aes(label = orgunit_name),
+               size = 3, color = usaid_black)
+```
+
+## Basemaps
+
+Visualize the basemap
+
+```{r}
+#| label: ras-basemap-summary-cntry
+#| class-output: hscroll
+#| echo: true
+#| output: true
+#| eval: true
+#| warning: false
+
+bmap
+```
+
+## Basemaps
+
+Let's produce these basemap for multiple countries
+
+```{r}
+
+#| label: ras-basemap-summary-cntry
+#| class-output: hscroll
 #| echo: true
 #| output: false
 #| eval: true
 #| warning: false
 
-# Basemap
-bmap <- terrain_map(countries = cntry_shp, 
-                    adm0 = cntry_shp, adm1 = psnu_shp, terr = terr, 
-                    add_labels = TRUE, add_neighbors = TRUE, mask = TRUE)
-```
+# Distinct countries list
+countries <- df_lvls %>% 
+  filter(str_detect(operatingunit, "Region$", negate = TRUE)) %>% 
+  distinct(countryname) %>% 
+  pull()
 
-Visualize the basemap
-
-```{r}
-#| label: ras-basemap-view-3
-#| echo: true
-#| eval: true
-#| warning: false
-bmap
+countries %>% 
+  sample(size = 5, replace = FALSE) %>% 
+  walk(function(.cntry){
+    
+    print(.cntry)
+    
+    # extract country uid
+    .cntry_uid <- get_ouuid(operatingunit = .cntry,
+                           username = datim_user(),
+                           password = datim_pwd(),
+                           baseurl = "https://datim.org/")
+    
+    .df_orgs <- datim_orgunits(cntry = .cntry, username = datim_user(), password = datim_pwd()) %>% 
+      rename_with(.cols = ends_with("_internal_id"),
+                  .fn = ~str_replace(., "internal_id", "uid"))
+    
+    .lvl_psnu <- df_lvls %>% 
+      filter(countryname == .cntry, orgunit_label == "prioritization") %>% 
+      pull(orgunit_level)
+    
+    # Get attributes tables
+    .df_psnu <- .df_orgs %>% filter(orgunit_level == .lvl_psnu) 
+    
+    # filter out country boundary
+    .cntry_shp <- spdf %>% filter(uid == .cntry_uid)
+      
+    # filter out psnu
+    .psnu_shp <- .df_orgs %>% 
+      filter(orgunit_level == .lvl_psnu)  %>% 
+      left_join(spdf, ., by = c("uid" = "orgunit_uid")) %>% 
+      filter(!is.na(orgunit_name))
+    
+    # Basemap
+    .bmap <- terrain_map(countries = .cntry_shp,
+                        adm0 = .cntry_shp, adm1 = .psnu_shp, 
+                        terr = terr, mask = TRUE) 
+    
+    # .bmap <- .bmap +
+    #   geom_sf_text(data = .psnu_shp, 
+    #                aes(label = orgunit_name),
+    #                size = 3, color = usaid_black)
+    
+    print(.bmap)
+  })
+  
 ```
