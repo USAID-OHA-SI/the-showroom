@@ -1,5 +1,5 @@
 ---
-title: "GIS Infrastructure for HIV-AIDS Work"
+title: "GIS Infrastructure for Global Health & HIV-AIDS Programs"
 date: "2023-10-18"
 author: 
   - name: Baboyma Kagniniwa
@@ -43,51 +43,97 @@ The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.co
 
 # [Guiding Principles]{style="color:white;"} {#sec-guiding-principles background-image="https://unsplash.com/photos/CJBCaMkLP_U/download?ixid"}
 
-## Organize around shared responsibility and accountability
+## Organized around shared responsibility and accountability
 
--   Analyses are **well-documented, reproducible**, and **open** to the office
+-   Analyses are **well-documented, testable, reproducible**, and **open** to the office
 
--   Code pushed to github repo following SI best practices
+-   Code pushed to github repositories are following **SI best practices**
 
--   Leverage SI infrastructure (R packages / OHA colors / Tableau Prep Flows)
+-   Leverage **SI infrastructure** (R packages / OHA Style Guide / Tableau Prep Flows)
 
--   Continuous improvement / open feedback loops (GitHub issues, after action reviews, etc.)
+-   Continuous **integration** and **improvement** / **open feedback loops** (GitHub issues, after action reviews, etc.)
 
 ## Why this works
 
 -   **Predictable** data structure, storage, and refresh schedule
 
--   Critical mass of analysts who code (or are learning)
+-   Critical mass of **analysts who code** (or are learning)
 
 -   **Space** for skill development and continuous learning
 
--   Support from leadership
+-   Support from **management**
 
 # [Pre-COVID]{style="color:white;"} {#sec-pre-covid background-image="https://unsplash.com/photos/d1eaoAabeXs/download?ixid"}
 
 ## A Small But Mighty Team
 
-One GIS specialists for HQ & Country Support (50+ operating units)
+1 GIS specialist for HQ & Country Support (50+ operating units)
+
+- Requests for maps and other geospatial analysis were handle by **ONE** staff
+
+- **ESRI ArcGIS** / **QGIS** were the only tools with limited number of licenses
+
+- **1 MXD file** for a limited number of outputs & clicking is the way out of these updates
+
+- Updating **recurring products** still meant clicking 1+
+
+- Other SI Advisers / Data Analysts / M&E Specialists had an excuse not to learn
+
+- **The GIS Specialist** is way too busy to get into other lines of work
 
 ## COVID & WFH
 
-GH/OHA hired more SI Advisers, Data Analysts, and Data Scientists in response to an increase work load and number of request for country support.
+OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in response to an increase work load and number of request for country support.
 
-R / RStudio is starting to compete with Tableau, ESRI/ArcGIS, and other geospatial analytics and mapping tools ...
+- The office gain additional R users
 
-R adoption is picking up ...
+- The front office is starting to push for more advanced geospatial analytics
 
-The requests for maps is also picking up ...
+- Hard to find COVID Data for PEPFAR Countries
+
+- Humanitarian Exchange Website is now hosting some COVID Data - with frequent update
+
+- R / RStudio is starting to compete with ESRI/ArcGIS, QGIS and Tableau
+
+- SI Branch is also starting to figure out how to build of each others work
+
+- **COVID Utilities** Package is born (inspired by Utilities)
+
 
 # [Post-COVID]{style="color:white;"} {#sec-post-covid background-image="https://unsplash.com/photos/j2c7yf223Mk/download?ixid"}
 
-## Tool Restrictions
+## Digging a **PIT OF SUCCESS** for your organization
 
-M/GIS crack down on **Open Source Tools** due to the **Zero-trust policy** ...
+How does 1 GIS Specialist or a small group of analysts respond to a map requests from OHA and other 50+ HIV-AIDS Country programs during COP?
 
-Majority of staff is still on Remote Work or Telework mode ...
+- You start by getting lost in your own home directory 
 
-GH/OHA is not ramp up on **ArcGIS Licenses** ...
+- ESRI ArcGIS, QGIS and Tableau are good but you are still standing still
+
+- Scripting / Programming languages (R, Python, Go, ...) 
+
+- Motivating others to run with you will pay off
+
+- Embracing documentation, collaboration and reproducibility
+
+- Continue to learn, teach and share
+
+- You will probably get more work but eventually hand over the keys to mapping ...
+
+
+## Open Source vs M/CIO 
+
+M/CIO crack down on **Open Source Tools** due to the **Zero-trust policy** is threatening our Infrastructure
+
+- Getting a new GFE is becoming scary ... 
+
+- QGIS, R, RStudio, Git, Github are no longer approved for GFEs
+
+- OHA, with the help of other R/RStudio users in the agency, has managed to get an exception
+
+- We are now pushing for another exception for Git, if not Git + Github
+
+- Tableau is also under scrutiny ... Will VDI Protect us better?
 
 # [Tools and Capacity Building]{style="color:white;"} {#tools background-image="https://unsplash.com/photos/s8OO2-t-HmQ/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Nnx8dG9vbHN8ZW58MHx8fHwxNjgxODIxNjY1&force=true&w=1920"}
 
@@ -121,6 +167,8 @@ GH/OHA is not ramp up on **ArcGIS Licenses** ...
 
 R + Rstudio is our primary analytic tool. Most of the SI infrastructure is based on `tidyverse` principles and workflows.
 
+::: columns
+::: {.column width="60%"}
 ::: {layout-nrow="3"}
 [![](https://github.com/USAID-OHA-SI/glitr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/glitr/) [![](https://github.com/USAID-OHA-SI/glamr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/glamr) [![](https://github.com/USAID-OHA-SI/gophr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/gophr) [![](https://github.com/USAID-OHA-SI/gisr/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/gisr/)
 
@@ -128,8 +176,14 @@ R + Rstudio is our primary analytic tool. Most of the SI infrastructure is based
 
 [![](https://github.com/USAID-OHA-SI/mindthegap/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/mindthegap) [![](https://github.com/USAID-OHA-SI/COVIDutilities/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/COVIDutilities) [![](https://github.com/USAID-OHA-SI/selfdestructin5/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/selfdestructin5/) [![](https://github.com/USAID-OHA-SI/coRps/raw/main/figures/logo.png){width="175"}](https://github.com/USAID-OHA-SI/coRps)
 :::
+:::
+::: {.column width="40%"}
+[![](https://github.com/USAID-OHA-SI/gisr/raw/main/man/figures/logo.png){width="600"}](https://usaid-oha-si.github.io/gisr/)
+:::
+:::
 
-## GitHub + Git
+
+## Git + Github
 
 Use git locally for version control and Github to store packages and analytic code online. This allows for remote collaboration and serves as a default knowledge management platform.
 
@@ -139,32 +193,138 @@ Use git locally for version control and Github to store packages and analytic co
 
 ## Capacity Building
 
-1. coRps - R Community of Practice 
-2. TLC - Tableau Learning Collaborative
-3. Data Visualization Training & Lectures
+Make a personal commitment to continue to learn, teach, mentor and share your work with others. Blogs, brown bags, learning collaboratively, training sessions are also good options.
 
-## Empowering Users
-Developed a set of self-service tools to automate routine data munging and visualization tasks
+Always make time to help others reproduce what you've done and/or shared.
 
-1. Custom R Packages- gisr & glitr
-2. PEPFAR Geospatial Data Parsing
-3. Pre-set color choices & graphic elements
+[![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/)
+
+# [DEMOS]{style="color:white;"} {#examples background-image="https://unsplash.com/photos/AFB6S2kibuk/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8bWFwc3xlbnwwfHx8fDE2OTcxNjUzODl8MA&force=true&w=1920"}
+
+## Geospatial Datasets
+
+[DATIM](https://datim.org) is the official data management system for all PEPFAR Programs across countries. Geospatial datasets are also part of this system.
 
 
+- Program data (**Where**, What, Who, What): 
+  
+  - Finance and Expenditure Reports (ER)
+  - Monitoring Evaluation and Reporting (**MER**)
+  - Human Resources for Health (HRH)
+  - Site Improvement Through Monitoring System (SIMS)
+  - More ...
 
-## Tools
+- Geospatial: 
 
-1.  R
-2.  Tableau
-3.  ArcGIS
+  - Facilities
+  - Administrative boundaries
+  
+## Identify and Extract Geodata
 
-## Capacility Building and Training
+PEPFAR location (where) data are organized into organisational hierarchies (orgunit) unique identifiers (orgunit uid). The global shapefile shared has only 1 attribue: `uid` for `orgunit_uid`.
 
-1.  coRps
-2.  TLC
-3.  Etc
+Let's find the file. We need to load some libraries and setup our reference directories.
 
-## Tools & Self Service Options
+```{r}
+#| label: libs
+#| echo: true
 
-1.  Custom R Packages - gisr & glitr
-2.  PEPFAR Geospatial Data Parsing
+# Libraries
+
+# Posit data munging and viz libraies
+library(tidyverse)
+library(sf)
+# OHA Custom Packages
+library(glamr)
+library(grabr)
+library(gisr)
+
+# Directories
+dir_vec <- si_path(type = "path_vector")
+dir_ras <- si_path(type = "path_raster")
+dir_mer <- si_path(type = "path_msd")
+
+# Output path
+dir_vec
+
+```
+
+## Identify and Extract Geodata 
+
+Let's locate the file. 
+
+```{r, `code-line-numbers` = "13-17"}
+#| label: setup
+#| echo: true
+#| output: false
+
+# Files
+
+getwd()
+
+list.files("..")
+
+list.files(file.path("..", dir_vec))
+
+list.files(path = file.path("..", dir_vec), 
+           pattern = "VcPepfarPolygons.shp", 
+           recursive = TRUE)
+
+pepfar_shp <- return_latest(
+  folderpath = file.path("..", dir_vec), 
+  pattern = "VcPepfarPolygons.shp", 
+  recursive = TRUE
+)
+
+```
+
+```{r}
+#| echo: false
+#| output: true
+pepfar_shp
+```
+
+## Identify and Extract Geodata 
+
+What is inside this shapefile? 
+
+```{r, `code-line-numbers` = "13-17"}
+#| label: shp-str
+#| echo: true
+#| output: false
+
+spdf <- read_sf(pepfar_shp)
+
+# glimpse(spdf)
+
+# Rows: 7,429
+# Columns: 2
+# $ uid      <chr> "uXwFHXCPYgj", "Yhf4p9zEkYl", "P82LOpqd4Bx", "MTPoa0xZGqK", …
+# $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((13.39702 -8..., MULTIPOLYGON ((…
+
+```
+
+## Identify and Extract Geodata 
+
+What's the content of this shapefile? 
+
+```{r}
+#| label: shp-view
+#| echo: true
+#| output: false
+#| eval: false
+
+# Base ploting
+plot(spdf)
+
+# ggplot plot
+spdf %>% 
+  ggplot() +
+  geom_sf(fill = NA, lwd = .3, color = "#6c6463")
+```
+
+```{r}
+# Custom plot based of ggplot + geom_sf
+gview(spdf)
+```
+
