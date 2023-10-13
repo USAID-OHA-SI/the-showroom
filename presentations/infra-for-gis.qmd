@@ -308,8 +308,10 @@ spdf <- read_sf(pepfar_shp)
 
 What's the content of this shapefile? 
 
+This can be accomplished with base R or ggplot2
+
 ```{r}
-#| label: shp-view
+#| label: shp-view-base
 #| echo: true
 #| output: false
 #| eval: false
@@ -317,14 +319,236 @@ What's the content of this shapefile?
 # Base ploting
 plot(spdf)
 
+# or
+
 # ggplot plot
 spdf %>% 
   ggplot() +
   geom_sf(fill = NA, lwd = .3, color = "#6c6463")
 ```
 
+We just need 1 line with simplified output
+
 ```{r}
+#| label: shp-view-ggplot
+#| output: false
+#| eval: false
 # Custom plot based of ggplot + geom_sf
 gview(spdf)
 ```
 
+## Identify and Extract Geodata 
+
+![](./infra-for-gis_files/figure-revealjs/shp-view-ggplot-1.png)
+
+## Identify and Extract Geodata 
+
+This looks like a global dataset. Can I extract data for 1 country? 
+
+Let's find the country uid first and then extract the country boundary
+
+```{r}
+#| label: shp-cntry
+#| echo: true
+#| output: false
+#| eval: true
+
+# Param
+cntry <- "Nigeria"
+
+# extract country uid
+cntry_uid <- get_ouuid(operatingunit = cntry,
+                       username = datim_user(),
+                       password = datim_pwd(),
+                       baseurl = "https://datim.org/")
+
+# filter out country boundary
+cntry_shp <- spdf %>% filter(uid == cntry_uid)
+
+```
+
+Visualize the country boundary
+
+```{r}
+#| label: shp-cntry-view
+#| eval: false
+
+# View
+gview(cntry_shp)
+```
+
+## Identify and Extract Geodata 
+
+![](./infra-for-gis_files/figure-revealjs/shp-cntry-view-1.png)
+
+## Identify and Extract Geodata 
+
+Let's now extract a lower orgunit level (administrative unit: state / PSNU)
+
+```{r}
+#| label: shp-psnu
+#| echo: true
+#| output: false
+#| eval: true
+
+# extract orgunit levels
+
+df_lvls <- get_levels(username = datim_user(), password = datim_pwd())
+
+df_lvls <- df_lvls %>% 
+  pivot_longer(cols = where(is.numeric),
+               names_to = "orgunit_label", values_to = "orgunit_level") %>% 
+  filter(countryname == cntry)
+
+lvl_psnu <- get_ouorglevel(operatingunit = cntry, org_type = "prioritization",
+                           username = datim_user(), password = datim_pwd())
+
+orgs_psnu <- get_ouorguids(ouuid = cntry_uid, level = lvl_psnu,
+                           username = datim_user(), password = datim_pwd())
+
+# filter out country boundary
+psnu_shp <- spdf %>% filter(uid %in% orgs_psnu)
+
+```
+
+Visualize the state boundaries
+
+```{r}
+#| label: shp-psnu-view
+#| eval: false
+gview(psnu_shp)
+```
+
+## Identify and Extract Geodata 
+
+![](./infra-for-gis_files/figure-revealjs/shp-psnu-view-1.png)
+
+## Basemaps
+
+How can we use these administrative boundaries data?
+
+Let's make a basemap using some terrain datasets - raster 
+
+```{r}
+#| label: ras-global
+#| eval: true
+#| echo: true
+#| output: false
+#| warning: false
+#| error: false
+
+# Terrain data
+terr <- get_raster(path = file.path("..", dir_ras))
+
+# class      : RasterLayer 
+# dimensions : 8100, 16200, 131220000  (nrow, ncol, ncell)
+# resolution : 0.02222222, 0.02222222  (x, y)
+# extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+# crs        : +proj=longlat +datum=WGS84 +no_defs 
+# source     : SR_LR.tif 
+# names      : SR_LR 
+```
+
+## Basemaps
+
+Generate a basemap
+
+```{r}
+#| label: ras-basemap-1
+#| echo: true
+#| output: false
+#| eval: true
+#| warning: false
+
+# Basemap - this is built on top of Naturalearth Data
+bmap <- terrain_map(countries = cntry, terr = terr, mask = TRUE)
+```
+
+Visualize the basemap
+
+```{r}
+#| label: ras-basemap-view-1
+#| echo: true
+#| eval: true
+#| warning: false
+bmap
+```
+
+## Basemaps
+
+Generate a basemap with labels
+
+```{r}
+#| label: ras-basemap-2
+#| echo: true
+#| output: false
+#| eval: true
+#| warning: false
+
+# Basemap
+bmap <- terrain_map(countries = cntry, terr = terr, 
+                    add_labels = TRUE, mask = TRUE)
+```
+
+Visualize the basemap
+
+```{r}
+#| label: ras-basemap-view-2
+#| echo: true
+#| eval: true
+#| warning: false
+bmap
+```
+
+## Basemaps
+
+Generate a basemap with labels and neighbors countries
+
+```{r}
+#| label: ras-basemap-3
+#| echo: true
+#| output: false
+#| eval: true
+#| warning: false
+
+# Basemap
+bmap <- terrain_map(countries = cntry, terr = terr, 
+                    add_labels = TRUE, add_neighbors = TRUE, mask = TRUE)
+```
+
+Visualize the basemap
+
+```{r}
+#| label: ras-basemap-view-3
+#| echo: true
+#| eval: true
+#| warning: false
+bmap
+```
+
+## Basemaps
+
+Generate a basemap with specific datasets
+
+```{r}
+#| label: ras-basemap-3
+#| echo: true
+#| output: false
+#| eval: true
+#| warning: false
+
+# Basemap
+bmap <- terrain_map(countries = cntry_shp, 
+                    adm0 = cntry_shp, adm1 = psnu_shp, terr = terr, 
+                    add_labels = TRUE, add_neighbors = TRUE, mask = TRUE)
+```
+
+Visualize the basemap
+
+```{r}
+#| label: ras-basemap-view-3
+#| echo: true
+#| eval: true
+#| warning: false
+bmap
+```
