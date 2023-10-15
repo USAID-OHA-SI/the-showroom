@@ -12,7 +12,8 @@ format:
     width: 1600
     height: 900
     logo: "https://usaid-oha-si.github.io/assets/img/si_logo_white.png"
-    css: ["theme/theme.css"]
+    #css: ["theme/theme.css"]
+    css: "https://github.com/USAID-OHA-SI/glit-css/blob/main/main.css"
     theme: simple
     echo: true
     rtl: false
@@ -204,7 +205,7 @@ Always make time to help others reproduce what you've done and/or shared.
 
 [DATIM](https://datim.org) is the official data management system for all PEPFAR Programs across countries. Geospatial datasets are also part of this system.
 
-
+:::{.nonincremental}
 - Program data (**Where**, What, Who, What): 
   
   - Finance and Expenditure Reports (ER)
@@ -217,14 +218,15 @@ Always make time to help others reproduce what you've done and/or shared.
 
   - Facilities
   - Administrative boundaries
+:::
   
-## Identify and Extract Geodata
+## PEPFAR Geodata
 
 PEPFAR location (where) data are organized into organisational hierarchies (orgunit) unique identifiers (orgunit uid). The global shapefile shared has only 1 attribue: `uid` for `orgunit_uid`.
 
 Let's find the file. We need to load some libraries and setup our reference directories.
 
-```{r}
+```{r, `code-line-numbers` = "13-15,18"}
 #| label: libs
 #| echo: true
 
@@ -249,9 +251,9 @@ dir_vec
 
 ```
 
-## Identify and Extract Geodata 
+## PEPFAR Geodata 
 
-Let's locate the file. 
+Let's locate the latest and most up to date shapefile
 
 ```{r, `code-line-numbers` = "13-17"}
 #| label: setup
@@ -285,28 +287,41 @@ pepfar_shp <- return_latest(
 pepfar_shp
 ```
 
-## Identify and Extract Geodata 
+## PEPFAR Geodata
 
 What is inside this shapefile? 
 
-```{r, `code-line-numbers` = "13-17"}
-#| label: shp-str
+```{r}
+#| label: shp-read
 #| echo: true
 #| output: false
 
 # Global shapefile
 spdf <- read_sf(pepfar_shp)
 
-# glimpse(spdf)
+```
+
+Shapefile structure - The only non-geometry attribute is `uid` (orgunits uid)
+
+```{r, `code-line-numbers` = "3-6"}
+#| label: shp-str
+#| echo: true
+#| eval: false
+#| output: false
+
+glimpse(spdf)
 
 # Rows: 7,429
 # Columns: 2
 # $ uid      <chr> "uXwFHXCPYgj", "Yhf4p9zEkYl", "P82LOpqd4Bx", "MTPoa0xZGqK", …
 # $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((13.39702 -8..., MULTIPOLYGON ((…
-
 ```
 
-## Identify and Extract Geodata 
+::: {.callout-note}
+R `sf::read_sf()` function allows you to view geometry field as a regular attribute.
+:::
+
+## PEPFAR Geodata
 
 What's the content of this shapefile? 
 
@@ -321,7 +336,6 @@ This can be accomplished with base R or ggplot2
 # Base ploting
 plot(spdf)
 
-# or
 
 # ggplot plot
 spdf %>% 
@@ -329,7 +343,7 @@ spdf %>%
   geom_sf(fill = NA, lwd = .3, color = "#6c6463")
 ```
 
-We just need 1 line with simplified output
+For us, it's just a 1 line for a simplified output
 
 ```{r}
 #| label: shp-view-ggplot
@@ -339,15 +353,23 @@ We just need 1 line with simplified output
 gview(spdf)
 ```
 
-## Identify and Extract Geodata 
+## PEPFAR Geodata 
+
+PEPFAR Global administrative dataset
+
+```{r}
+#| label: shp-view-ggplot-2
+#| output: false
+#| eval: false
+# Custom plot based of ggplot + geom_sf
+gview(spdf)
+```
 
 ![](./infra-for-gis_files/figure-revealjs/shp-view-ggplot-1.png)
 
-## Identify and Extract Geodata 
+## Identify and Extract country specitic geodata 
 
-This looks like a global dataset. Can I extract data for 1 country? 
-
-Let's find the country uid first and then extract the country boundary
+Let's extract country specific data through the orgunit uid 
 
 ```{r}
 #| label: shp-cntry
@@ -367,9 +389,20 @@ cntry_uid <- get_ouuid(operatingunit = cntry,
 # filter out country boundary
 cntry_shp <- spdf %>% filter(uid == cntry_uid)
 
+# Examine
+cntry_shp %>% class()
+#[1] "sf"         "tbl_df"     "tbl"        "data.frame"
+
+cntry_shp %>% glimpse()
+# Rows: 1
+# Columns: 2
+# $ uid      <chr> "PqlFzhuPcF1"
+# $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((7.327693 4....
 ```
 
-Visualize the country boundary
+## Identify and Extract country specitic geodata
+
+Nigeria - National / Country Boundaries
 
 ```{r}
 #| label: shp-cntry-view
@@ -379,11 +412,9 @@ Visualize the country boundary
 gview(cntry_shp)
 ```
 
-## Identify and Extract Geodata 
-
 ![](./infra-for-gis_files/figure-revealjs/shp-cntry-view-1.png)
 
-## Identify and Extract Geodata 
+## Identify and Extract country specitic geodata 
 
 Let's now extract a lower orgunit level (administrative unit: state / PSNU)
 
@@ -413,7 +444,10 @@ psnu_shp <- spdf %>% filter(uid %in% orgs_psnu)
 
 ```
 
-Visualize the state boundaries
+
+## Identify and Extract country specitic geodata 
+
+Nigeria - States / PSNUs Boundaries
 
 ```{r}
 #| label: shp-psnu-view
@@ -421,15 +455,48 @@ Visualize the state boundaries
 gview(psnu_shp)
 ```
 
-## Identify and Extract Geodata 
-
 ![](./infra-for-gis_files/figure-revealjs/shp-psnu-view-1.png)
+
+## Other sources for geodata - Naturalearth & GADM
+
+[Naturalearth](https://www.naturalearthdata.com/downloads/) and [GADM](https://gadm.org/download_country.html) are also good sources for geodata ...
+
+```{r}
+#| label: other-sources-ne
+#| eval: true
+#| echo: true
+#| output: false
+#| warning: false
+#| error: false
+
+# Admin 0
+adm0 <- get_admin0(countries = cntry)
+
+adm0 <- get_adm_boundaries(country_code = "NGA", adm_level = 0, download = F, path = "../GIS")
+
+# Amdin 1
+adm1 <- get_admin1(countries = cntry)
+
+adm1 <- get_adm_boundaries(country_code = "NGA", adm_level = 1, download = F, path = "../GIS")
+
+```
+
+Visualize the admin boundaries
+```{r}
+#| label: other-sources-ne-view
+#| eval: true
+#| echo: true
+#| output: false
+#| warning: false
+#| error: false
+
+gview(adm0)
+
+```
 
 ## Basemaps
 
-How can we use these administrative boundaries data?
-
-Let's make a basemap using some terrain datasets - raster 
+How can we use these administrative boundaries data? Let's make a basemap using some terrain dataset - RasterLayer
 
 ```{r}
 #| label: ras-global
@@ -453,7 +520,7 @@ terr <- get_raster(path = file.path("..", dir_ras))
 
 ## Basemaps
 
-Generate a basemap using administrative boundaries from naturalearth
+Generate a basemap using administrative boundaries from **naturalearth**
 
 ```{r}
 #| label: ras-basemap-1
@@ -478,7 +545,7 @@ bmap
 
 ## Basemaps
 
-Generate a basemap with specific datasets
+Generate a basemap with **user provided geodata**
 
 ```{r}
 #| label: ras-basemap-2
@@ -488,9 +555,7 @@ Generate a basemap with specific datasets
 #| warning: false
 
 # Basemap
-bmap <- terrain_map(countries = cntry_shp,
-                    adm0 = cntry_shp, adm1 = psnu_shp, 
-                    terr = terr, mask = TRUE)
+bmap <- terrain_map(countries = cntry_shp, adm0 = cntry_shp, adm1 = psnu_shp, terr = terr, mask = TRUE)
 ```
 
 Visualize the basemap
@@ -503,12 +568,17 @@ Visualize the basemap
 bmap
 ```
 
+:::{.collout-note}
+This is very useful when you are working offline
+:::
+
 ## Basemaps
 
 Generate a basemap with labels
 
 ```{r}
 #| label: ras-basemap-3
+#| class-output: hscroll
 #| echo: true
 #| output: false
 #| eval: true
@@ -522,6 +592,7 @@ df_psnu <- datim_orgunits(cntry = cntry,
   rename_with(.cols = ends_with("_internal_id"),
               .fn = ~str_replace(., "internal_id", "uid"))
 
+# Join attributes to geodata (uid = orgunit_uid)
 psnu_shp <- psnu_shp %>% 
   left_join(df_psnu, by = c("uid" = "orgunit_uid")) %>% 
   filter(!is.na(orgunit_name))
@@ -531,6 +602,7 @@ bmap <- terrain_map(countries = cntry_shp,
                     adm0 = cntry_shp, adm1 = psnu_shp, 
                     terr = terr, mask = TRUE) 
 
+# Add labels
 bmap <- bmap +
   geom_sf_text(data = psnu_shp, 
                aes(label = orgunit_name),
@@ -546,7 +618,9 @@ Visualize the basemap
 #| echo: true
 #| eval: true
 #| warning: false
-#| 
+
+# terrain_map(..., add_labels = TRUE)
+
 bmap
 ```
 
@@ -558,12 +632,11 @@ Let's summarize what we've done so far
 #| label: ras-basemap-summary-global
 #| class-output: hscroll
 #| echo: true
-#| output: false
+#| output: true
 #| eval: true
-#| logging: 
 #| warning: false
 
-# Global shapefile
+# Global shape file
 spdf <- read_sf(pepfar_shp)
 
 # Terrain data
@@ -572,15 +645,19 @@ terr <- get_raster(path = file.path("..", dir_ras))
 # Global Orgunit levels
 df_lvls <- get_levels(username = datim_user(), password = datim_pwd()) %>% 
   pivot_longer(cols = where(is.numeric), names_to = "orgunit_label", values_to = "orgunit_level")
+
+df_lvls %>% glimpse()
 ```
+## Basemaps
+
+Let's summarize what we've done so far ... continue
 
 ```{r}
 #| label: ras-basemap-summary-cntry
 #| class-output: hscroll
 #| echo: true
 #| output: false
-#| eval: true
-#| logging: 
+#| eval: false
 #| warning: false
 
 # Country specific parameters
@@ -589,22 +666,17 @@ df_lvls <- get_levels(username = datim_user(), password = datim_pwd()) %>%
 cntry <- "Nigeria"
 
 # extract country uid
-cntry_uid <- get_ouuid(operatingunit = cntry,
-                       username = datim_user(),
-                       password = datim_pwd(),
-                       baseurl = "https://datim.org/")
+cntry_uid <- get_ouuid(operatingunit = cntry, username = datim_user(), password = datim_pwd())
 
 df_orgs <- datim_orgunits(cntry = cntry, username = datim_user(), password = datim_pwd()) %>% 
-  rename_with(.cols = ends_with("_internal_id"),
-              .fn = ~str_replace(., "internal_id", "uid"))
+  rename_with(.cols = ends_with("_internal_id"), .fn = ~str_replace(., "internal_id", "uid"))
 
 lvl_psnu <- df_lvls %>% 
   filter(countryname == cntry, orgunit_label == "prioritization") %>% 
   pull(orgunit_level)
 
 # Get attributes tables
-df_psnu <- df_orgs %>% 
-  filter(orgunit_level == lvl_psnu) 
+df_psnu <- df_orgs %>% filter(orgunit_level == lvl_psnu) 
 
 # filter out country boundary
 cntry_shp <- spdf %>% filter(uid == cntry_uid)
@@ -616,9 +688,7 @@ psnu_shp <- df_orgs %>%
   filter(!is.na(orgunit_name))
 
 # Basemap
-bmap <- terrain_map(countries = cntry_shp,
-                    adm0 = cntry_shp, adm1 = psnu_shp, 
-                    terr = terr, mask = TRUE) 
+bmap <- terrain_map(countries = cntry_shp, adm0 = cntry_shp, adm1 = psnu_shp, terr = terr, mask = TRUE) 
 
 bmap <- bmap +
   geom_sf_text(data = psnu_shp, 
@@ -626,32 +696,17 @@ bmap <- bmap +
                size = 3, color = usaid_black)
 ```
 
-## Basemaps
-
-Visualize the basemap
-
-```{r}
-#| label: ras-basemap-summary-cntry
-#| class-output: hscroll
-#| echo: true
-#| output: true
-#| eval: true
-#| warning: false
-
-bmap
-```
 
 ## Basemaps
 
 Let's produce these basemap for multiple countries
 
 ```{r}
-
-#| label: ras-basemap-summary-cntry
+#| label: ras-basemap-summary-cntry-batch
 #| class-output: hscroll
 #| echo: true
 #| output: false
-#| eval: true
+#| eval: false
 #| warning: false
 
 # Distinct countries list
@@ -661,21 +716,19 @@ countries <- df_lvls %>%
   pull()
 
 countries %>% 
-  sample(size = 5, replace = FALSE) %>% 
+  sample(size = 6, replace = FALSE) %>% 
   walk(function(.cntry){
     
     print(.cntry)
     
     # extract country uid
-    .cntry_uid <- get_ouuid(operatingunit = .cntry,
-                           username = datim_user(),
-                           password = datim_pwd(),
-                           baseurl = "https://datim.org/")
+    .cntry_uid <- get_ouuid(operatingunit = .cntry, username = datim_user(), password = datim_pwd())
     
+    # extract country orgunits
     .df_orgs <- datim_orgunits(cntry = .cntry, username = datim_user(), password = datim_pwd()) %>% 
-      rename_with(.cols = ends_with("_internal_id"),
-                  .fn = ~str_replace(., "internal_id", "uid"))
+      rename_with(.cols = ends_with("_internal_id"), .fn = ~str_replace(., "internal_id", "uid"))
     
+    # psnu level
     .lvl_psnu <- df_lvls %>% 
       filter(countryname == .cntry, orgunit_label == "prioritization") %>% 
       pull(orgunit_level)
@@ -693,16 +746,85 @@ countries %>%
       filter(!is.na(orgunit_name))
     
     # Basemap
-    .bmap <- terrain_map(countries = .cntry_shp,
-                        adm0 = .cntry_shp, adm1 = .psnu_shp, 
-                        terr = terr, mask = TRUE) 
+    .bmap <- terrain_map(countries = .cntry_shp, adm0 = .cntry_shp, adm1 = .psnu_shp, terr = terr, mask = TRUE) 
     
     # .bmap <- .bmap +
     #   geom_sf_text(data = .psnu_shp, 
     #                aes(label = orgunit_name),
     #                size = 3, color = usaid_black)
     
-    print(.bmap)
+    # Save output
+    si_save(filename = glue::glue("../Graphics/{.cntry}-basemap.png"), plot = .bmap)
+    
+    #print(.bmap)
   })
   
 ```
+
+
+## Basemaps 
+
+Output from batch productions 
+
+::: columns
+::: {.column width="50%"}
+
+![](Graphics/Cote d'Ivoire-basemap.png){fig-align="center" width="500"}
+
+![](Graphics/Namibia-basemap.png){fig-align="center" width="500"}
+:::
+
+::: {.column width="50%"}
+
+![](Graphics/Ukraine-basemap.png){fig-align="center" width="500"}
+
+![](Graphics/Kenya-basemap.png){fig-align="center" width="500"}
+:::
+:::
+
+## Thematic Maps 
+
+Most of our thematic maps are based off the basemaps + additional layers + style guide 
+
+![](Graphics/Screenshot - pepfar-nigeria-agency-coverage.png){width="500"}
+
+## Thematic Maps 
+
+There are times when **Adobe Illustrator** comes to our rescue :) 
+
+![](Graphics/Screenshot - pepfar-zambia- geo hierarchy.png){width="500"}
+
+## Thematic Maps 
+
+Maps don't always tell the ful story ... add more plots and **label important elements**
+
+![](Graphics/Screenshot - pepfar-nigeria-art-coverage.png){width="500"}
+
+## Thematic Maps 
+
+Be creative ... a poster might help make a better point ...
+
+![](Graphics/Screenshot - pepfar-africa - DREAMS.png){width="1000"}
+
+## Resources 
+
+Below are some of our R Resources. Help yourself and share feedback
+
+:::{.nonincremental}
+
+- [OHA Data Visualisation Guide](https://usaid-oha-si.github.io/styleguide/)
+
+- [OHA Custom R Packages](https://usaid-oha-si.github.io/tools/)
+
+- [Learning resources](https://usaid-oha-si.github.io/learn/)
+
+- [Reference materials](https://usaid-oha-si.github.io/reference/)
+
+- [Github page](https://github.com/USAID-OHA-SI)
+:::
+
+:::{.callout-note}
+Continue to learn new things, teach them to others, and share with the world - you will sure make a difference
+:::
+
+# []{style="color:white;"} {#thankyou background-image="https://unsplash.com/photos/t48eHCSCnds/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8dGhhbmslMjB5b3V8ZW58MHx8fHwxNjk3NDAyMTAzfDA&force=true&w=1920"}
