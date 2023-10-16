@@ -96,7 +96,7 @@ OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in re
 
 - R / RStudio is starting to compete with ESRI/ArcGIS, QGIS and Tableau
 
-- SI Branch is also starting to figure out how to build of each others work
+- SI Branch is also starting to figure out how to build off each others work
 
 - **COVID Utilities** Package is born (inspired by ICPI Utilities)
 
@@ -111,7 +111,7 @@ How does 1 GIS Specialist or a small group of analysts respond to a map requests
 
 - ESRI ArcGIS, QGIS and Tableau are good but you are still standing still
 
-- Scripting / Programming languages (R, Python, Go, ...) 
+- Scripting / Programming languages (R, Python, Go, SQL, ...) will help
 
 - Motivating others to run with you will pay off
 
@@ -371,7 +371,7 @@ gview(spdf)
 
 Let's extract country specific data through the orgunit uid 
 
-```{r}
+```{r, `code-line-numbers` = "11"}
 #| label: shp-cntry
 #| echo: true
 #| output: false
@@ -400,25 +400,16 @@ cntry_shp %>% glimpse()
 # $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((7.327693 4....
 ```
 
-## Identify and Extract country specitic geodata
+:::{.callout-note}
+`dplyr::filter()` replaces all the **definition queries**
+:::
 
-Nigeria - National / Country Boundaries
-
-```{r}
-#| label: shp-cntry-view
-#| eval: false
-
-# View
-gview(cntry_shp)
-```
-
-![](./infra-for-gis_files/figure-revealjs/shp-cntry-view-1.png)
 
 ## Identify and Extract country specitic geodata 
 
 Let's now extract a lower orgunit level (administrative unit: state / PSNU)
 
-```{r}
+```{r, `code-line-numbers` = "5,17"}
 #| label: shp-psnu
 #| echo: true
 #| output: false
@@ -447,15 +438,23 @@ psnu_shp <- spdf %>% filter(uid %in% orgs_psnu)
 
 ## Identify and Extract country specitic geodata 
 
-Nigeria - States / PSNUs Boundaries
+Nigeria - Country & States / PSNUs Boundaries
 
 ```{r}
 #| label: shp-psnu-view
 #| eval: false
+gview(country_shp)
 gview(psnu_shp)
 ```
 
+:::{.columns}
+:::{.column width="50%"}
+![](./infra-for-gis_files/figure-revealjs/shp-cntry-view-1.png)
+:::
+:::{.column width="50%"}
 ![](./infra-for-gis_files/figure-revealjs/shp-psnu-view-1.png)
+:::
+:::
 
 ## Other sources for geodata - Naturalearth & GADM
 
@@ -481,24 +480,11 @@ adm1 <- get_adm_boundaries(country_code = "NGA", adm_level = 1, download = F, pa
 
 ```
 
-Visualize the admin boundaries
-```{r}
-#| label: other-sources-ne-view
-#| eval: true
-#| echo: true
-#| output: false
-#| warning: false
-#| error: false
-
-gview(adm0)
-
-```
-
 ## Basemaps
 
 How can we use these administrative boundaries data? Let's make a basemap using some terrain dataset - RasterLayer
 
-```{r}
+```{r, `code-line-numbers` = "2"}
 #| label: ras-global
 #| eval: true
 #| echo: true
@@ -520,41 +506,19 @@ terr <- get_raster(path = file.path("..", dir_ras))
 
 ## Basemaps
 
-Generate a basemap using administrative boundaries from **naturalearth**
+Generate a basemap with **naturalearth** or **user provided** geodata
 
-```{r}
-#| label: ras-basemap-1
-#| echo: true
-#| output: false
-#| eval: true
-#| warning: false
-
-# Basemap - this is built on top of Naturalearth Data
-bmap <- terrain_map(countries = cntry, terr = terr, mask = TRUE)
-```
-
-Visualize the basemap
-
-```{r}
-#| label: ras-basemap-view-1
-#| echo: true
-#| eval: true
-#| warning: false
-bmap
-```
-
-## Basemaps
-
-Generate a basemap with **user provided geodata**
-
-```{r}
+```{r, `code-line-numbers` = "2,5"}
 #| label: ras-basemap-2
 #| echo: true
 #| output: false
 #| eval: true
 #| warning: false
 
-# Basemap
+# Basemap - with NE data
+bmap <- terrain_map(countries = cntry, terr = terr, mask = TRUE)
+
+# Basemap - user specified data
 bmap <- terrain_map(countries = cntry_shp, adm0 = cntry_shp, adm1 = psnu_shp, terr = terr, mask = TRUE)
 ```
 
@@ -568,7 +532,7 @@ Visualize the basemap
 bmap
 ```
 
-:::{.collout-note}
+:::{.callout-note}
 This is very useful when you are working offline
 :::
 
@@ -624,7 +588,7 @@ Visualize the basemap
 bmap
 ```
 
-## Basemaps
+## Basemaps {visibility="hidden"}
 
 Let's summarize what we've done so far
 
@@ -648,7 +612,7 @@ df_lvls <- get_levels(username = datim_user(), password = datim_pwd()) %>%
 
 df_lvls %>% glimpse()
 ```
-## Basemaps
+## Basemaps {visibility="hidden"}
 
 Let's summarize what we've done so far ... continue
 
@@ -699,9 +663,9 @@ bmap <- bmap +
 
 ## Basemaps
 
-Let's produce these basemap for multiple countries
+Let's produce these basemaps for multiple countries
 
-```{r}
+```{r, `code-line-numbers` = "7-9"}
 #| label: ras-basemap-summary-cntry-batch
 #| class-output: hscroll
 #| echo: true
@@ -787,24 +751,36 @@ Output from batch productions
 Most of our thematic maps are based off the basemaps + additional layers + style guide 
 
 ![](Graphics/Screenshot - pepfar-nigeria-agency-coverage.png){width="500"}
+## Thematic Maps 
+
+Program coverage & Distribution of PLHIV maps
+
+![](Graphics/tza_usaid_presence.png){width="500"}
 
 ## Thematic Maps 
 
 There are times when **Adobe Illustrator** comes to our rescue :) 
 
-![](Graphics/Screenshot - pepfar-zambia- geo hierarchy.png){width="500"}
+:::{.columns}
+:::{.column width="50%"}
+![](Graphics/ZMB_PLHIV_COP22_word-01.png){width="500"}
+:::
+:::{.column width="50%"}
+![](Graphics/ZMB_PLHIV_PCT_COP22_word-01.png){width="500"}
+:::
+:::
 
 ## Thematic Maps 
 
-Maps don't always tell the ful story ... add more plots and **label important elements**
+Maps don't always tell the full story ... add more plots and **label important elements**
 
 ![](Graphics/Screenshot - pepfar-nigeria-art-coverage.png){width="500"}
 
 ## Thematic Maps 
 
-Be creative ... a poster might help make a better point ...
+Be creative ... dots on the map can be overwhelming - try using hex bins ...
 
-![](Graphics/Screenshot - pepfar-africa - DREAMS.png){width="1000"}
+![](Graphics/Screenshot - pepfar-tanzania-hfr-hexbins.png){width="1000"}
 
 ## Resources 
 
