@@ -28,7 +28,9 @@ project:
 
 ## Office of HIV/AIDS
 
-Implement the U.S. President's Emergency Plan for AIDS Relief (PEPFAR)
+Implement the **U.S. President's Emergency Plan for AIDS Relief (PEPFAR).**
+
+In 2022 USAID spent about **\$6.9 Billion** on HIV/AIDS.
 
 ![](Graphics/01_usaid_presence_ous-01.png)
 
@@ -68,35 +70,33 @@ The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.co
 
 ## A Small But Mighty Team
 
-1 GIS specialist for HQ & Country Support (50+ operating units)
+One GIS Specialist for HQ (\~**250** staff) & Country Support (**50+ countries**)
 
--   Requests for maps and other geospatial analysis were handle by **ONE** staff
+-   **One** person handles all geospatial analysis requests in fast-paced operational environment
 
--   **ESRI ArcGIS** / **QGIS** were the only tools with limited number of licenses
+-   **ESRI ArcGIS / QGIS** are primary tools with limited number of licenses (high barrier to entry)
 
--   **1 MXD file** for a limited number of outputs & clicking is the way out of these updates
+-   **One .MXD file** for outputs; Point and click (and hope) process for batching maps
 
--   Updating **recurring products** still meant clicking 1+
-
--   The barrier to entry was high
+-   Updating **recurring products** meant pointing and clicking multiple times
 
 -   **The GIS Specialist** is way too busy to get into other lines of work
 
 ## COVID & WFH
 
-OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in response to an increase work load and number of request for country support.
+OHA hires more **SI Advisers, Data Analysts, and Data Scientists** to support increased work load and growing country support requests
 
--   The office gain additional R users
+-   Gain additional R users
 
--   The front office is starting to push for more advanced geospatial analytics
+-   OHA Front Office asks for more advanced geospatial analytics
 
 -   Hard to find COVID Data for PEPFAR Countries
 
 -   Humanitarian Exchange Website is now hosting some COVID Data - with frequent update
 
--   R / RStudio is starting to compete with ESRI/ArcGIS, QGIS and Tableau
+-   R / RStudio (**sf package**) is starting to compete with ESRI/ArcGIS, QGIS and Tableau
 
--   SI Branch is also starting to figure out how to build off each others work
+-   SI Branch introduces bespoke packages & data viz tools to improve collaboration opportunities and provide guide rails for consistent looking products
 
 -   **COVID Utilities** Package is born (inspired by ICPI Utilities)
 
@@ -104,23 +104,21 @@ OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in re
 
 ## Digging a **PIT OF SUCCESS** for your organization
 
-How does 1 GIS Specialist or a small group of analysts respond to a map requests from OHA and other 50+ HIV-AIDS Country programs during COP?
+How does a **small group of analysts** respond to a map requests from OHA (\~300+) and other 50+ country programs during Country Operational Plan (**COP**) development?
 
 -   You start by getting lost in your own home directory
 
--   ESRI ArcGIS, QGIS and Tableau are good but you are still standing still
+-   ESRI ArcGIS, QGIS and Tableau are satisfactory but CIO restrictions limit collaboration opportunities
 
--   Scripting / Programming languages (R, Python, Go, SQL, ...) will help
+-   Scripting / Programming languages (R, Python, Go, SQL, ...) can automate components; Version control (Git + Github) fosters collaboration (motivates other to run w/ you)
 
--   Motivating others to run with you will pay off
+-   Embrace documentation, collaboration, reproducibility and open-source mindset
 
--   Embracing documentation, collaboration and reproducibility
+-   Expand set of bespoke R packages; Continue to learn, teach and share
 
--   Continue to learn, teach and share
+-   You get more work but can hand keys over to others as they are trained ...
 
--   You will probably get more work but eventually hand over the keys to mapping ...
-
-## Open Source vs M/CIO
+## Ongoing Challenges: Open Source vs M/CIO
 
 M/CIO crack down on **Open Source Tools** due to the **Zero-trust policy** is threatening our Infrastructure
 
@@ -186,7 +184,7 @@ R + Rstudio is our primary analytic tool. Most of the SI infrastructure is based
 
 Use git locally for version control and Github to store packages and analytic code online. This allows for remote collaboration and serves as a default knowledge management platform.
 
-*No data are stored on GitHub -- only code.*
+[*No data are stored on GitHub -- only code.*]{style="color:#c43d4d; font-weight: bold;"}
 
 ![](https://user-images.githubusercontent.com/5873344/232575267-f395d8ae-859e-4443-a563-b5c4fe81d61e.PNG)
 
@@ -194,7 +192,7 @@ Use git locally for version control and Github to store packages and analytic co
 
 Make a personal commitment to continue to learn, teach, mentor and share your work with others. Blogs, brown bags, learning collaboratively, training sessions are also good options.
 
-Always make time to help others reproduce what you've done and/or shared. [![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/)
+Always make time to help others reproduce what you've done and/or shared. [![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/){style="height=100%"}
 
 # [DEMOS]{style="color:white;"} {#examples background-image="https://unsplash.com/photos/AFB6S2kibuk/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8bWFwc3xlbnwwfHx8fDE2OTcxNjUzODl8MA&force=true&w=1920"}
 
@@ -260,8 +258,6 @@ Let's locate the latest and most up to date shapefile
 # Files
 
 getwd()
-
-list.files("..")
 
 list.files(file.path("..", dir_vec))
 
@@ -438,7 +434,7 @@ Nigeria - Country & States / PSNUs Boundaries
 ```{r}
 #| label: shp-psnu-view
 #| eval: false
-gview(country_shp)
+gview(cntry_shp)
 gview(psnu_shp)
 ```
 
@@ -670,7 +666,7 @@ Let's produce these basemaps for multiple countries
 #| warning: false
 
 # Distinct countries list
-countries <- df_lvls %>% 
+countries <- get_levels(username = datim_user(), password = datim_pwd()) %>% 
   filter(str_detect(operatingunit, "Region$", negate = TRUE)) %>% 
   distinct(countryname) %>% 
   pull()
@@ -743,7 +739,9 @@ Output from batch productions
 
 Most of our thematic maps are based off the basemaps + additional layers + style guide
 
-![](Graphics/Screenshot%20-%20pepfar-nigeria-agency-coverage.png){width="500"} \## Thematic Maps
+![](Graphics/Screenshot%20-%20pepfar-nigeria-agency-coverage.png){width="500"} 
+
+## Thematic Maps
 
 Program coverage & Distribution of PLHIV maps
 
@@ -792,7 +790,7 @@ Below are some of our R Resources. Help yourself and share feedback
 :::
 
 ::: callout-note
-Continue to learn new things, teach them to others, and share with the world - you will sure make a difference
+Continue to learn new things, teach them to others, and share with the world - you will surely make a difference
 :::
 
 #  {#thankyou background-image="https://unsplash.com/photos/t48eHCSCnds/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8dGhhbmslMjB5b3V8ZW58MHx8fHwxNjk3NDAyMTAzfDA&force=true&w=1920"}
