@@ -28,9 +28,13 @@ project:
 
 ## Office of HIV/AIDS
 
-Implement the U.S. President's Emergency Plan for AIDS Relief (PEPFAR)
+Implement the **U.S. President's Emergency Plan for AIDS Relief (PEPFAR).**
 
-![](https://www.state.gov/wp-content/uploads/2023/01/PEPFAR-20-Logo-Social-Tagged.jpg)
+In 2022 USAID spent about **\$6.9 Billion** on HIV/AIDS.
+
+![](Graphics/01_usaid_presence_ous-01.png)
+
+## [Happy Birthday Michael!]{style="color:white;"} {#sec-dbay-mc background-image="https://unsplash.com/photos/Z30Jpgmx2UY/download?ixid"}
 
 ## About Us
 
@@ -68,73 +72,67 @@ The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.co
 
 ## A Small But Mighty Team
 
-1 GIS specialist for HQ & Country Support (50+ operating units)
+One GIS Specialist for HQ (\~**250** staff) & Country Support (**50+ countries**)
 
-- Requests for maps and other geospatial analysis were handle by **ONE** staff
+-   **One** person handles all geospatial analysis requests in fast-paced operational environment
 
-- **ESRI ArcGIS** / **QGIS** were the only tools with limited number of licenses
+-   **ESRI ArcGIS / QGIS** are primary tools with limited number of licenses (high barrier to entry)
 
-- **1 MXD file** for a limited number of outputs & clicking is the way out of these updates
+-   **One .MXD file** for outputs; Point and click (and hope) process for batching maps
 
-- Updating **recurring products** still meant clicking 1+
+-   Updating **recurring products** meant pointing and clicking multiple times
 
-- The barrier to entry was high
-
-- **The GIS Specialist** is way too busy to get into other lines of work
+-   **The GIS Specialist** is way too busy to get into other lines of work
 
 ## COVID & WFH
 
-OHA hired more **SI Advisers**, **Data Analysts**, and **Data Scientists** in response to an increase work load and number of request for country support.
+OHA hires more **SI Advisers, Data Analysts, and Data Scientists** to support increased work load and growing country support requests
 
-- The office gain additional R users
+-   Gain additional R users
 
-- The front office is starting to push for more advanced geospatial analytics
+-   OHA Front Office asks for more advanced geospatial analytics
 
-- Hard to find COVID Data for PEPFAR Countries
+-   Hard to find COVID Data for PEPFAR Countries
 
-- Humanitarian Exchange Website is now hosting some COVID Data - with frequent update
+-   Humanitarian Exchange Website is now hosting some COVID Data - with frequent update
 
-- R / RStudio is starting to compete with ESRI/ArcGIS, QGIS and Tableau
+-   R / RStudio (**sf package**) is starting to compete with ESRI/ArcGIS, QGIS and Tableau
 
-- SI Branch is also starting to figure out how to build off each others work
+-   SI Branch introduces bespoke packages & data viz tools to improve collaboration opportunities and provide guide rails for consistent looking products
 
-- **COVID Utilities** Package is born (inspired by ICPI Utilities)
-
+-   **COVID Utilities** Package is born (inspired by ICPI Utilities)
 
 # [Post-COVID]{style="color:white;"} {#sec-post-covid background-image="https://unsplash.com/photos/j2c7yf223Mk/download?ixid"}
 
 ## Digging a **PIT OF SUCCESS** for your organization
 
-How does 1 GIS Specialist or a small group of analysts respond to a map requests from OHA and other 50+ HIV-AIDS Country programs during COP?
+How does a **small group of analysts** respond to a map requests from OHA (\~300+) and other 50+ country programs during Country Operational Plan (**COP**) development?
 
-- You start by getting lost in your own home directory 
+-   You start by getting lost in your own home directory
 
-- ESRI ArcGIS, QGIS and Tableau are good but you are still standing still
+-   ESRI ArcGIS, QGIS and Tableau are satisfactory but CIO restrictions limit collaboration opportunities
 
-- Scripting / Programming languages (R, Python, Go, SQL, ...) will help
+-   Scripting / Programming languages (R, Python, Go, SQL, ...) can automate components; Version control (Git + Github) fosters collaboration (motivates other to run w/ you)
 
-- Motivating others to run with you will pay off
+-   Embrace documentation, collaboration, reproducibility and open-source mindset
 
-- Embracing documentation, collaboration and reproducibility
+-   Expand set of bespoke R packages; Continue to learn, teach and share
 
-- Continue to learn, teach and share
+-   You get more work but can hand keys over to others as they are trained ...
 
-- You will probably get more work but eventually hand over the keys to mapping ...
-
-
-## Open Source vs M/CIO 
+## Ongoing Challenges: Open Source vs M/CIO
 
 M/CIO crack down on **Open Source Tools** due to the **Zero-trust policy** is threatening our Infrastructure
 
-- Getting a new GFE is becoming scary ... 
+-   Getting a new GFE is becoming scary ...
 
-- QGIS, R, RStudio, Git, Github are no longer approved for GFEs
+-   QGIS, R, RStudio, Git, Github are no longer approved for GFEs
 
-- OHA, with the help of other R/RStudio users in the agency, has managed to get an exception
+-   OHA, with the help of other R/RStudio users in the agency, has managed to get an exception
 
-- We are now pushing for another exception for Git, if not Git + Github
+-   We are now pushing for another exception for Git, if not Git + Github
 
-- Tableau is also under scrutiny ... Will VDI Protect us better?
+-   Tableau is also under scrutiny ... Will VDI Protect us better?
 
 # [Tools and Capacity Building]{style="color:white;"} {#tools background-image="https://unsplash.com/photos/s8OO2-t-HmQ/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Nnx8dG9vbHN8ZW58MHx8fHwxNjgxODIxNjY1&force=true&w=1920"}
 
@@ -178,17 +176,17 @@ R + Rstudio is our primary analytic tool. Most of the SI infrastructure is based
 [![](https://github.com/USAID-OHA-SI/mindthegap/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/mindthegap) [![](https://github.com/USAID-OHA-SI/COVIDutilities/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/COVIDutilities) [![](https://github.com/USAID-OHA-SI/selfdestructin5/raw/main/man/figures/logo.png){width="175"}](https://usaid-oha-si.github.io/selfdestructin5/) [![](https://github.com/USAID-OHA-SI/coRps/raw/main/figures/logo.png){width="175"}](https://github.com/USAID-OHA-SI/coRps)
 :::
 :::
+
 ::: {.column width="40%"}
 [![](https://github.com/USAID-OHA-SI/gisr/raw/main/man/figures/logo.png){width="600"}](https://usaid-oha-si.github.io/gisr/)
 :::
 :::
 
-
 ## Git + Github
 
 Use git locally for version control and Github to store packages and analytic code online. This allows for remote collaboration and serves as a default knowledge management platform.
 
-*No data are stored on GitHub -- only code.*
+[*No data are stored on GitHub -- only code.*]{style="color:#c43d4d; font-weight: bold;"}
 
 ![](https://user-images.githubusercontent.com/5873344/232575267-f395d8ae-859e-4443-a563-b5c4fe81d61e.PNG)
 
@@ -196,8 +194,7 @@ Use git locally for version control and Github to store packages and analytic co
 
 Make a personal commitment to continue to learn, teach, mentor and share your work with others. Blogs, brown bags, learning collaboratively, training sessions are also good options.
 
-Always make time to help others reproduce what you've done and/or shared.
-[![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/)
+Always make time to help others reproduce what you've done and/or shared. [![](https://usaid-oha-si.github.io/assets/img/posts/20220606-rbbs-rbbs-mapping_with_r-20220606_rbbs_11-mapping.png)](https://usaid-oha-si.github.io/learn/){style="height=100%"}
 
 # [DEMOS]{style="color:white;"} {#examples background-image="https://unsplash.com/photos/AFB6S2kibuk/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8bWFwc3xlbnwwfHx8fDE2OTcxNjUzODl8MA&force=true&w=1920"}
 
@@ -205,21 +202,21 @@ Always make time to help others reproduce what you've done and/or shared.
 
 [DATIM](https://datim.org) is the official data management system for all PEPFAR Programs across countries. Geospatial datasets are also part of this system.
 
-:::{.nonincremental}
-- Program data (**Where**, What, Who, What): 
-  
-  - Finance and Expenditure Reports (ER)
-  - Monitoring Evaluation and Reporting (**MER**)
-  - Human Resources for Health (HRH)
-  - Site Improvement Through Monitoring System (SIMS)
-  - More ...
+::: nonincremental
+-   Program data (**Where**, What, Who, What):
 
-- Geospatial: 
+    -   Finance and Expenditure Reports (ER)
+    -   Monitoring Evaluation and Reporting (**MER**)
+    -   Human Resources for Health (HRH)
+    -   Site Improvement Through Monitoring System (SIMS)
+    -   More ...
 
-  - Facilities
-  - Administrative boundaries
+-   Geospatial:
+
+    -   Facilities
+    -   Administrative boundaries
 :::
-  
+
 ## PEPFAR Geodata
 
 PEPFAR location (where) data are organized into organisational hierarchies (orgunit) unique identifiers (orgunit uid). The global shapefile shared has only 1 attribue: `uid` for `orgunit_uid`.
@@ -251,11 +248,11 @@ dir_vec
 
 ```
 
-## PEPFAR Geodata 
+## PEPFAR Geodata
 
 Let's locate the latest and most up to date shapefile
 
-```{r, `code-line-numbers` = "13-17"}
+```{r, `code-line-numbers` = "11-15"}
 #| label: setup
 #| echo: true
 #| output: false
@@ -263,8 +260,6 @@ Let's locate the latest and most up to date shapefile
 # Files
 
 getwd()
-
-list.files("..")
 
 list.files(file.path("..", dir_vec))
 
@@ -289,7 +284,7 @@ pepfar_shp
 
 ## PEPFAR Geodata
 
-What is inside this shapefile? 
+What is inside this shapefile?
 
 ```{r}
 #| label: shp-read
@@ -317,13 +312,13 @@ glimpse(spdf)
 # $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((13.39702 -8..., MULTIPOLYGON ((…
 ```
 
-::: {.callout-note}
+::: callout-note
 R `sf::read_sf()` function allows you to view geometry field as a regular attribute.
 :::
 
 ## PEPFAR Geodata
 
-What's the content of this shapefile? 
+What's the content of this shapefile?
 
 This can be accomplished with base R or ggplot2
 
@@ -353,7 +348,7 @@ For us, it's just a 1 line for a simplified output
 gview(spdf)
 ```
 
-## PEPFAR Geodata 
+## PEPFAR Geodata
 
 PEPFAR Global administrative dataset
 
@@ -367,9 +362,9 @@ gview(spdf)
 
 ![](./infra-for-gis_files/figure-revealjs/shp-view-ggplot-1.png)
 
-## Identify and Extract country specitic geodata 
+## Identify and Extract country specitic geodata
 
-Let's extract country specific data through the orgunit uid 
+Let's extract country specific data through the orgunit uid
 
 ```{r, `code-line-numbers` = "11"}
 #| label: shp-cntry
@@ -400,12 +395,11 @@ cntry_shp %>% glimpse()
 # $ geometry <MULTIPOLYGON [°]> MULTIPOLYGON (((7.327693 4....
 ```
 
-:::{.callout-note}
+::: callout-note
 `dplyr::filter()` replaces all the **definition queries**
 :::
 
-
-## Identify and Extract country specitic geodata 
+## Identify and Extract country specitic geodata
 
 Let's now extract a lower orgunit level (administrative unit: state / PSNU)
 
@@ -435,23 +429,23 @@ psnu_shp <- spdf %>% filter(uid %in% orgs_psnu)
 
 ```
 
-
-## Identify and Extract country specitic geodata 
+## Identify and Extract country specitic geodata
 
 Nigeria - Country & States / PSNUs Boundaries
 
 ```{r}
 #| label: shp-psnu-view
 #| eval: false
-gview(country_shp)
+gview(cntry_shp)
 gview(psnu_shp)
 ```
 
-:::{.columns}
-:::{.column width="50%"}
+::: columns
+::: {.column width="50%"}
 ![](./infra-for-gis_files/figure-revealjs/shp-cntry-view-1.png)
 :::
-:::{.column width="50%"}
+
+::: {.column width="50%"}
 ![](./infra-for-gis_files/figure-revealjs/shp-psnu-view-1.png)
 :::
 :::
@@ -532,7 +526,7 @@ Visualize the basemap
 bmap
 ```
 
-:::{.callout-note}
+::: callout-note
 This is very useful when you are working offline
 :::
 
@@ -612,6 +606,7 @@ df_lvls <- get_levels(username = datim_user(), password = datim_pwd()) %>%
 
 df_lvls %>% glimpse()
 ```
+
 ## Basemaps {visibility="hidden"}
 
 Let's summarize what we've done so far ... continue
@@ -660,7 +655,6 @@ bmap <- bmap +
                size = 3, color = usaid_black)
 ```
 
-
 ## Basemaps
 
 Let's produce these basemaps for multiple countries
@@ -674,7 +668,7 @@ Let's produce these basemaps for multiple countries
 #| warning: false
 
 # Distinct countries list
-countries <- df_lvls %>% 
+countries <- get_levels(username = datim_user(), password = datim_pwd()) %>% 
   filter(str_detect(operatingunit, "Region$", negate = TRUE)) %>% 
   distinct(countryname) %>% 
   pull()
@@ -725,82 +719,80 @@ countries %>%
   
 ```
 
+## Basemaps
 
-## Basemaps 
-
-Output from batch productions 
+Output from batch productions
 
 ::: columns
 ::: {.column width="50%"}
-
-![](Graphics/Cote d'Ivoire-basemap.png){fig-align="center" width="500"}
+![](Graphics/Cote%20d'Ivoire-basemap.png){fig-align="center" width="500"}
 
 ![](Graphics/Namibia-basemap.png){fig-align="center" width="500"}
 :::
 
 ::: {.column width="50%"}
-
 ![](Graphics/Ukraine-basemap.png){fig-align="center" width="500"}
 
 ![](Graphics/Kenya-basemap.png){fig-align="center" width="500"}
 :::
 :::
 
-## Thematic Maps 
+## Thematic Maps
 
-Most of our thematic maps are based off the basemaps + additional layers + style guide 
+Most of our thematic maps are based off the basemaps + additional layers + style guide
 
-![](Graphics/Screenshot - pepfar-nigeria-agency-coverage.png){width="500"}
-## Thematic Maps 
+![](Graphics/Screenshot%20-%20pepfar-nigeria-agency-coverage.png){width="500"} 
+
+## Thematic Maps
 
 Program coverage & Distribution of PLHIV maps
 
 ![](Graphics/tza_usaid_presence.png){width="500"}
 
-## Thematic Maps 
+## Thematic Maps
 
-There are times when **Adobe Illustrator** comes to our rescue :) 
+There are times when **Adobe Illustrator** comes to our rescue :)
 
-:::{.columns}
-:::{.column width="50%"}
+::: columns
+::: {.column width="50%"}
 ![](Graphics/ZMB_PLHIV_COP22_word-01.png){width="500"}
 :::
-:::{.column width="50%"}
+
+::: {.column width="50%"}
 ![](Graphics/ZMB_PLHIV_PCT_COP22_word-01.png){width="500"}
 :::
 :::
 
-## Thematic Maps 
+## Thematic Maps
 
 Maps don't always tell the full story ... add more plots and **label important elements**
 
-![](Graphics/Screenshot - pepfar-nigeria-art-coverage.png){width="500"}
+![](Graphics/Screenshot%20-%20pepfar-nigeria-art-coverage.png){width="500"}
 
-## Thematic Maps 
+## Thematic Maps
 
 Be creative ... dots on the map can be overwhelming - try using hex bins ...
 
-![](Graphics/Screenshot - pepfar-tanzania-hfr-hexbins.png){width="1000"}
+![](Graphics/Screenshot%20-%20pepfar-tanzania-hfr-hexbins.png){width="1000"}
 
-## Resources 
+## Resources
 
 Below are some of our R Resources. Help yourself and share feedback
 
-:::{.nonincremental}
+::: nonincremental
+-   [OHA Data Visualisation Guide](https://usaid-oha-si.github.io/styleguide/)
 
-- [OHA Data Visualisation Guide](https://usaid-oha-si.github.io/styleguide/)
+-   [OHA Custom R Packages](https://usaid-oha-si.github.io/tools/)
 
-- [OHA Custom R Packages](https://usaid-oha-si.github.io/tools/)
+-   [Learning resources](https://usaid-oha-si.github.io/learn/)
 
-- [Learning resources](https://usaid-oha-si.github.io/learn/)
+-   [Reference materials](https://usaid-oha-si.github.io/reference/)
 
-- [Reference materials](https://usaid-oha-si.github.io/reference/)
-
-- [Github page](https://github.com/USAID-OHA-SI)
+-   [Github page](https://github.com/USAID-OHA-SI)
 :::
 
-:::{.callout-note}
-Continue to learn new things, teach them to others, and share with the world - you will sure make a difference
+::: callout-note
+Continue to learn new things, teach them to others, and share with the world - you will surely make a difference
 :::
 
-# []{style="color:white;"} {#thankyou background-image="https://unsplash.com/photos/t48eHCSCnds/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8dGhhbmslMjB5b3V8ZW58MHx8fHwxNjk3NDAyMTAzfDA&force=true&w=1920"}
+#  {#thankyou background-image="https://unsplash.com/photos/t48eHCSCnds/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8dGhhbmslMjB5b3V8ZW58MHx8fHwxNjk3NDAyMTAzfDA&force=true&w=1920"}
