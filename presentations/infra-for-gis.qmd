@@ -34,6 +34,8 @@ In 2022 USAID spent about **\$6.9 Billion** on HIV/AIDS.
 
 ![](Graphics/01_usaid_presence_ous-01.png)
 
+## [Happy Birthday Michael!]{style="color:white;"} {#sec-dbay-mc background-image="https://unsplash.com/photos/Z30Jpgmx2UY/download?ixid"}
+
 ## About Us
 
 The **Strategic Information Branch** **([GH/OHA/SIEI/SI](https://sites.google.com/a/usaid.gov/gh-oha/home/oha-divisions-branches/-strategic-information-evaluation-informatics-division/strategic-information-branch))** provides technical expertise to support and promote data-informed decision making, through program monitoring, reporting and analysis in order to target resources appropriately to achieve HIV epidemic control.
@@ -250,7 +252,7 @@ dir_vec
 
 Let's locate the latest and most up to date shapefile
 
-```{r, `code-line-numbers` = "13-17"}
+```{r, `code-line-numbers` = "11-15"}
 #| label: setup
 #| echo: true
 #| output: false
