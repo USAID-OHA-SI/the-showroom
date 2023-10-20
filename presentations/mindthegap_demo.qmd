@@ -261,7 +261,6 @@ What is the difference between relative base and PLHIV base?
 
 -   **PLHIV base (testing & treatment cascade)** : the denominators changes, as this uses PLHIV as the base for the three 95's. This metric is best used for comparing across countries and highlights how many PLHIV are virally suppressed, which is an important indicator of whether a country will be able to end AIDS as a public health threat by 2030
 
-![](https:://drive.google.com/uc?id=1j3TIvqjh4g59_6TTACsW_THUj36lVUMa)
 
 ## Behind the scenes
 
