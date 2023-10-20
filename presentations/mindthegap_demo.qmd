@@ -1,0 +1,388 @@
+---
+title: "`Mindthegap` Demo"
+subtitle: "This presentation outlines some of the use cases for `mindthegap` and the *UNAIDS 2022 Estimates*"
+date: "2023-10-17"
+author: "Lemlem Baraki"
+format: 
+  revealjs:
+    transition: slide 
+    slide-number: c/t 
+    width: 1600
+    height: 900
+    logo: "https://github.com/USAID-OHA-SI/mindthegap/raw/main/man/figures/logo.png"
+    theme: simple 
+    echo: true 
+    rtl: false 
+    incremental: true 
+    preview-links: auto 
+editor: visual
+editor_options:
+    chunk_output_type: inline
+project:
+  execute-dir: file
+---
+
+# UNAIDS 2023 Update
+
+![](https://thepath.unaids.org/wp-content/themes/unaids2023/assets/imgs/book.png)
+
+```{r}
+#| echo: false
+#| output: false
+
+
+library(gagglr)
+library(tidyverse)
+library(glamr)
+load_secrets()
+
+```
+
+## Accessing Clean Data {.smaller}
+
+When trying to access clean data, you will want to use the `pull_unaids` function. There are 2 parameters to be aware of: the `data_type` ("HIV Estimates" or "HIV Test & Treat") and `pepfar_only` in which case the default is TRUE. This function pulls in the tidy data set from the Google Drive. Note: in order to access the data from the Google drive, be sure to load your USAID credentials.
+
+::: panel-tabset
+### Pull HIV Estimates data
+
+```{r, echo= TRUE}
+
+# Load library 
+library(mindthegap)
+
+df_est <- pull_unaids(data_type = "HIV Estimates", pepfar_only = TRUE) 
+knitr::kable(df_est[1:5, 1:10]) 
+ 
+```
+
+### Pull Test & Treat data
+
+```{r, echo=TRUE}
+
+# Load library 
+library(mindthegap)
+
+df_tt <- pull_unaids(data_type = "HIV Test & Treat", pepfar_only = TRUE)
+knitr::kable(df_tt[1:5, 1:10]) 
+
+```
+:::
+
+## Behind the scenes
+
+```{r}
+pull_unaids <- function(data_type, pepfar_only = TRUE) {
+
+  temp_folder <- glamr::temp_folder(quiet = TRUE)
+
+  if (pepfar_only == TRUE) {
+    filename <- glue::glue("UNAIDS_2023_Clean_Estimates_PEPFAR-only.csv.gz")
+  } else {
+    filename <- glue::glue("UNAIDS_2023_Clean_Estimates.csv.gz")
+  }
+
+  #download a specific file - test
+  piggyback::pb_download(file = filename,
+              repo = "USAID-OHA-SI/mindthegap",
+              tag = "latest",
+              dest = temp_folder,
+              show_progress = FALSE)
+
+  df <- temp_folder %>%
+    glamr::return_latest(quiet = TRUE) %>%
+    readr::read_csv(
+      col_types = list(
+        year = "d",
+        estimate = "d",
+        lower_bound = "d",
+        upper_bound = "d",
+        pepfar = "l",
+        `Achieved 95s with PLHIV base in 2022` = "l",
+        `Achieved 95s with relative base in 2022` = "l",
+        epi_control = "l",
+        .default = "c")
+    ) %>%
+    dplyr::filter(sheet == data_type)
+
+  return(df)
+}
+ 
+```
+
+## Visualizing Epidemic Control {.smaller}
+
+To evaluate PEPFAR countries progress toward epidemic control, you will want to use the `epi_plot` function. There are 2 parameters to be aware of: the `df` which is pre-defined and `sel_cntry` which is set to "All PEPFAR" by default. Note: a new aspect of this function is that you can pass through multiple countries to compare across OU's.
+
+::: {column}
+```{r,fig.align='center',fig.width= 10, fig.height=6}
+#| echo: true 
+#| layout-ncol: 2
+
+
+epi_plot()
+epi_plot(sel_cntry = c("Zambia", "Tanzania"))
+
+```
+:::
+
+## Behind the scenes
+
+```{r}
+#| code-line-numbers: "|1|3-7|9-16|17-25|27-38|40-45|50-94"
+
+
+epi_plot <- function(df = df_epi_pepfar, sel_cntry = c("All PEPFAR")){
+
+  df_epi <- mindthegap::pull_unaids(data_type = "HIV Estimates",pepfar_only = TRUE) %>% #pull from PEPFAR Only estimates
+    dplyr::filter(age == "All", sex == "All",
+                  indicator %in% c("Total deaths to HIV Population", "Number New HIV Infections")) %>% #grab indicators
+    dplyr::select(year, country,indicator, estimate) %>%
+    dplyr::arrange(country, indicator, year) #order rows by these variables
+
+  # Perform necessary munging
+  df_epi_ous <-
+    df_epi %>%
+    #dplyr::mutate(indicator = stringr::word(indicator, -1) %>% tolower) %>% #filters indicator name to last word
+    tidyr::pivot_wider(names_from = indicator, #pivots data wide into deaths and infections column
+                       values_from = estimate,
+                       names_glue = "{indicator %>% stringr::str_extract_all('deaths|Infections') %>% tolower}") #new death indicator
+
+  # Add in ALL PEPFAR data
+  df_epi_pepfar <-
+    df_epi_ous %>%
+    dplyr::bind_rows(df_epi_ous %>%
+                       dplyr::mutate(country = "All PEPFAR") %>%
+                       dplyr::group_by(country, year) %>%
+                       dplyr::summarise(across(where(is.numeric),
+                                               \(x) sum(x,na.rm = TRUE)),
+                                        .groups = "drop")) #sums PEPFAR country estimates
+
+  # Create epi control flag
+  df_epi_pepfar <-
+    df_epi_pepfar %>%
+    dplyr::mutate(declining_deaths = deaths - dplyr::lag(deaths, order_by = year) <= 0, by = c(country)) %>% #TRUE/FALSE declining
+    dplyr::mutate(infections_below_deaths = infections < deaths,
+                  ratio = infections / deaths,
+                  direction_streak = sequence(rle(declining_deaths)$lengths),
+                  epi_control = declining_deaths == TRUE & infections_below_deaths == TRUE) %>%
+    tidyr::pivot_longer(c(infections, deaths), names_to = "indicator") %>% #put back indicators in column
+    dplyr::arrange(country, indicator, year) %>%
+    dplyr::mutate(val_mod = ifelse(indicator == "deaths", -value, value), #create dual-axis
+                  fill_color = ifelse(indicator == "deaths", glitr::old_rose, glitr::denim)) #add colors to indicate flip axis
+
+  # OU list to check entries
+  #ou_list <- glamr::pepfar_country_list %>% dplyr::distinct(country) %>% dplyr::pull()
+  ou_list <- df_epi_pepfar %>% dplyr::distinct(country) %>% dplyr::pull()
+
+  # Check if each value is valid
+  is_valid <- all(sel_cntry %in% ou_list)
+
+  # Output the result
+  stopifnot("Please enter PEPFAR supported countries only" = is_valid != FALSE)
+
+  df_viz <-
+    df_epi_pepfar %>%
+    dplyr::filter(country %in% sel_cntry) %>% #change to listed countries
+    dplyr::mutate(val_lab = dplyr::case_when(year == max(year) ~
+                                               scales::number(value, 1, scale = 0.001, suffix = "k")),
+                  max_plot_pt = max(value),
+                  min_plot_pt = min(val_mod),
+                  lab_pt = dplyr::case_when(year == max(year) ~ val_mod),
+                  indicator = ifelse(indicator == "deaths", "Total Deaths to HIV Population", "New HIV Infections"), #creating labels
+                  new_hiv_label = dplyr::case_when(value == max_plot_pt ~ indicator),  #assigning label location to min/max
+                  tot_death_label = dplyr::case_when(val_mod == min_plot_pt ~ indicator)) %>%
+    dplyr::mutate(cntry_order = max(value, na.rm = T), .by = country) %>%
+    dplyr::mutate(country = forcats::fct_reorder(country, cntry_order, .desc = T))
+
+  suppressWarnings(df_viz %>%
+                     ggplot2::ggplot(ggplot2::aes(year, val_mod, group = indicator, fill = fill_color, color = fill_color)) +
+                     ggplot2::geom_blank(ggplot2::aes(y = max_plot_pt)) + #sets max y-axis above
+                     ggplot2::geom_blank(ggplot2::aes(y = -max_plot_pt)) + #sets max y-axis below
+                     ggplot2::geom_area(alpha = 0.25) +
+                     ggplot2::geom_hline(yintercept = 0,color = glitr::grey80k) +
+                     ggplot2::geom_line() +
+                     ggplot2::geom_point(ggplot2::aes(y = lab_pt), na.rm = TRUE, shape = 21, color = "white", size = 3) +
+                     ggplot2::geom_text(ggplot2::aes(label = val_lab), na.rm = TRUE, #value label text
+                                        hjust = -0.3,
+                                        family = "Source Sans Pro Light") +
+                     ggplot2::facet_wrap(~country) + #small multiples of countries
+                     #scale_y_continuous(labels = ~(scales::label_number_si())(abs(.))) + #deprecated - use 'scale_cut'
+                     ggplot2::scale_y_continuous(labels = ~ (scales::label_number(scale_cut = scales::cut_short_scale())(abs(.))),
+                                                 expand = c(0, 0)) +
+                     ggplot2::scale_x_continuous(breaks = seq(min(df_epi$year), max(df_epi$year),5)) + #automatic x-axis min/max
+                     #ggplot2::scale_x_continuous(breaks = seq(1990, 2025, 5)) + #manual x-axis breaks
+                     ggplot2::scale_fill_identity(aesthetics = c("fill", "color")) +
+                     geom_text(aes(label = new_hiv_label, x = 2005, y = (max_plot_pt)), na.rm = TRUE,
+                               hjust = -0.3, family = "Source Sans Pro Light") +
+                     geom_text(aes(label = tot_death_label, x = 2005, y = (min_plot_pt)), na.rm = TRUE,
+                               hjust = -0.3, family = "Source Sans Pro Light") +
+                     #ggplot2::annotate(geom = "text", x = 2008, y = 2.8e6, label = c("New HIV Infections"), hjust = 0,
+                     #      family = "Source Sans Pro Light", color = glitr::denim) +  #add labels to plot
+                     #ggplot2::annotate(geom = "text", x = 2008, y = -1.5e6, label = c("Total Deaths to HIV Population"), hjust = 0,
+                     #               family = "Source Sans Pro Light", color = glitr::old_rose) +
+                     ggplot2::labs(x = NULL, y = NULL) + ggplot2::coord_cartesian(expand = T, clip = "off") +
+                     glitr::si_style_ygrid(facet_space = 0.75) + #adjusted y-axis grid spacing with facet_space
+                     ggplot2::theme(axis.text.y = ggtext::element_markdown()) +
+                     ggplot2::labs(caption = "Source: UNAIDS Data 2022 Release"))
+
+} 
+```
+
+## Visualizing Progress to the 95's {.smaller}
+
+To evaluate a PEPFAR countries progress toward the 95's, you will want to use the `base_plot` function. There are 2 parameters to be aware of: the `sel_base` (Relative" or "PLHIV") and `sel_cntry` for the OU of interest.
+
+::: panel-tabset
+### Relative Base
+
+```{r, echo=TRUE}
+#| panel: tabset
+
+
+base_plot(sel_base = "Relative", sel_cntry = "Namibia")
+
+```
+
+### PLHIV Base
+
+```{r, echo=TRUE}
+#| panel: tabset
+
+
+base_plot(sel_base = "PLHIV", sel_cntry = "Namibia")
+```
+:::
+
+## Relative vs PLHIV base
+
+What is the difference between relative base and PLHIV base?
+
+-   **Relative base (95-95-95 targets)** : the denominator remains constant, as this uses the 95% target for PLHIV who know their status, are accessing treatment, and are virally suppressed. This metric is best used for tracking a a program's performance and evaluating the health of PLHIV
+
+-   **PLHIV base (testing & treatment cascade)** : the denominators changes, as this uses PLHIV as the base for the three 95's. This metric is best used for comparing across countries and highlights how many PLHIV are virally suppressed, which is an important indicator of whether a country will be able to end AIDS as a public health threat by 2030
+
+![](https:://drive.google.com/uc?id=1j3TIvqjh4g59_6TTACsW_THUj36lVUMa)
+
+## Behind the scenes
+
+```{r}
+base_plot <- function(sel_base, sel_cntry){
+
+  #Pull percent indicators from Test & Treat data
+  df_tt <- pull_unaids(data_type = "HIV Test & Treat", pepfar_only = TRUE) %>%
+    dplyr::filter(indic_type == "Percent")
+
+  goal <- 95
+
+  #PLHIV base
+  suppressWarnings({
+  if (sel_base == "PLHIV") {
+    df_tt <- df_tt %>%
+      dplyr::filter(year == max(year),
+             country == sel_cntry,
+             indicator %in% c("Percent Known Status of PLHIV",
+                              "Percent on ART of PLHIV",
+                              "Percent VLS of PLHIV"),
+             age == "All",
+             sex == "All") %>%
+      dplyr::mutate(set = dplyr::recode(indicator, "Percent Known Status of PLHIV" = 1,
+                          "Percent on ART of PLHIV" = 2,
+                          "Percent VLS of PLHIV" = 3),
+             goal_rate = round((goal/100)^set*100),
+             achieved = estimate >= goal_rate) %>%
+      dplyr::select(year, country, indicator, estimate, goal_rate, achieved) %>%
+      gt::gt() %>%
+      gt::cols_hide(c(year, country)) %>%
+      gt::fmt_percent(columns = c(estimate, goal_rate),
+                  decimals = 0, scale_values = FALSE) %>%
+      gt::cols_label(goal_rate = "goal") %>%
+      gtExtras::gt_theme_nytimes() %>%
+      gt::tab_source_note(source_note = gt::md(glue::glue("Source: UNAIDS Data 2022 Release"))) %>%
+      gt::tab_options(source_notes.font.size = gt::px(8),
+                  data_row.padding = gt::px(1),
+                  table.font.size = gt::px(12)) %>%
+      gtExtras::gt_color_rows(achieved, palette = RColorBrewer::brewer.pal("Set1", n=3), domain = c(0,1)) %>%
+      gt::tab_header(title = glue::glue("{toupper(sel_cntry)}'S 2022 TREATMENT TARGET GOALS: PLHIV BASE"))
+
+    #Relative base
+  } else if (sel_base == "Relative") {
+    df_tt <- df_tt %>%
+      dplyr::filter(year == max(year),
+             country == sel_cntry,
+             indicator %in% c("Percent Known Status of PLHIV",
+                              "Percent on ART with Known Status",
+                              "Percent VLS on ART"),
+             age == "All",
+             sex == "All") %>%
+      dplyr::mutate(goal_rate = 95, # Use 95 as the goal metric for each indicator
+             achieved = estimate >= goal_rate) %>%
+      dplyr::select(year, country, indicator, estimate, goal_rate, achieved) %>%
+      gt::gt() %>%
+      gt::cols_hide(c(year, country)) %>%
+      gt::fmt_percent(columns = c(estimate, goal_rate),
+                  decimals = 0, scale_values = FALSE) %>%
+      gt::cols_label(goal_rate = "goal") %>%
+      gtExtras::gt_theme_nytimes() %>%
+      gt::tab_source_note(source_note = gt::md(glue::glue("Source: UNAIDS Data 2022 Release"))) %>%
+      gt::tab_options(source_notes.font.size = gt::px(8),
+                  data_row.padding = gt::px(1),
+                  table.font.size = gt::px(12)) %>%
+      gtExtras::gt_color_rows(achieved, palette = RColorBrewer::brewer.pal("Set1", n=3), domain = c(0,1)) %>%
+      gt::tab_header(title = glue::glue("{toupper(sel_cntry)}'S 2022 TREATMENT TARGET GOALS: RELATIVE BASE"))
+  }
+  })
+  return(df_tt)
+
+}
+```
+
+## Additional Use Cases {.smaller}
+
+::: {column}
+```{r, echo=TRUE}
+#| layout-ncol: 2
+
+
+#Incidence/Prevalence Curves
+df_incid <- pull_unaids(data_type = "HIV Estimates", pepfar_only = TRUE) %>% 
+  select(year, indicator, country, age, sex, estimate, lower_bound, upper_bound, estimate_flag, epi_control) %>% 
+  filter(indicator %in% c("Percent Incidence", "Percent Prevalence")) %>% 
+  select(country, year, indicator, age, sex, estimate,lower_bound, upper_bound)
+
+df_incid
+
+#Ex) Create an incidence curve for Zambia spanning the last 20 years 
+df_zam <- df_incid %>% 
+  filter(indicator == "Percent Incidence",
+         country == "Zambia", 
+         age == "All",
+         sex == "All",
+         year %in% c(2000, 2005,2010, 2015, 2020)) %>% 
+  ggplot(aes(x = year, y= estimate, color = indicator)) +
+  geom_line()+
+  geom_area(fill = grey20k, alpha = 0.75) + 
+  scale_y_continuous()+
+  si_style_ygrid()+
+  theme(legend.position = "none")+
+  labs(title = "Zambia's Steady Decrease in HIV Incidene", y = "Incidence (%)")
+  
+df_zam
+  
+```
+:::
+
+## Resources
+
+-   [UNAIDS 2023 Report](https://www.unaids.org/sites/default/files/media_asset/2023-unaids-global-aids-update_en.pdf) (source of information for indicator definitions and calculation methods)
+-   [mindthegap vignette](https://usaid-oha-si.github.io/mindthegap/index.html) (details on how to install the package and use the functions)
+-   [mindthegap repo](https://github.com/USAID-OHA-SI/mindthegap) (where all the scripts and package updates are stored)
+
+::: footer
+Learn more: \[reach out to Aaron Chafetz, Karishma Srikanth, Tim Essam, and Lemlem Baraki\]
+:::
+
+```{r, echo=FALSE}
+
+#Scraps
+#(https:://drive.google.com/uc?id=1j3TIvqjh4g59_6TTACsW_THUj36lVUMa) link to 95's image
+```
